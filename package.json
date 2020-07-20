@@ -1,0 +1,7 @@
+{
+  "name": "web-ui",
+  "version": "1.0.0",
+  "dependencies": {
+    "tui-chart": "^3.11.2"
+  }
+}
