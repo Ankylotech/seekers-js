@@ -1,19 +1,16 @@
 <template>
   <div id="app">
     <ApplicationSelect/>
-    <PackChart/>
   </div>
 </template>
 
 <script>
 
-  import PackChart from "./components/Chart.vue";
-  import ApplicationSelect from "./components/ApplicationSelector.vue"
+  import ApplicationSelect from "./components/Applications.vue"
 
   export default {
     name: "app",
     components: {
-      PackChart,
       ApplicationSelect
     },
     data: function() {
