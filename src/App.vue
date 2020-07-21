@@ -1,22 +1,50 @@
 <template>
   <div id="app">
-    <ApplicationSelect/>
+    <p v-if="hasApplication">
+      <label for="applications">Choose an Application:  </label>
+      <select name="applications" id="applications" v-model="applicationName">
+        <option v-for="apps in applications" :key="apps" :value="apps">
+          {{apps}}
+        </option>
+      </select>
+
+      <DataPresenter :application="applicationName" />
+    </p>
+    <p v-else>
+       Loading Data. Please Wait.
+    </p>
   </div>
 </template>
 
 <script>
 
-  import ApplicationSelect from "./components/Applications.vue"
+  import DataPresenter from "./components/Applications.vue"
 
   export default {
     name: "app",
     components: {
-      ApplicationSelect
+      DataPresenter
     },
     data: function() {
       return {
-
+        applications: [],
+        applicationName: String,
+        hasApplication : false
       };
+    },
+    mounted() {
+      this.fetchApplicationsList()
+    },
+    methods: {
+      fetchApplicationsList() {
+        fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/').then((response) => {
+          response.json().then((apps) => {
+            this.applications = apps;
+            this.applicationName = apps[0];
+            this.hasApplication = true;
+          })
+        });
+      }
     },
 
   };

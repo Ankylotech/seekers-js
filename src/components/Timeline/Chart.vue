@@ -10,7 +10,9 @@
     export default {
         data() {
             return {
-
+                props: {
+                    application: String
+                }
             };
         },
         methods: {

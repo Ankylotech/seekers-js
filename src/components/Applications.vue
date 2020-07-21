@@ -1,29 +1,26 @@
 <template>
     <div>
-        <label for="applications">Choose an Application:  </label>
-        <select name="applications" id="applications">
-            <option v-for="apps in applications" :key="apps" :value="apps">
-                {{apps}}
-            </option>
-        </select>
         <div id="dynamic-component-demo" class="demo">
-            <button
-                    v-for="tab in tabs"
-                    v-bind:key="tab"
-                    v-bind:class="['tab-button', { active: currentTab === tab }]"
-                    v-on:click="currentTab = tab"
-            >
-                {{ tab }}
-            </button>
-
-            <component v-bind:is="currentTabComponent" class="tab"></component>
+            <p>
+                <button
+                        v-for="tab in tabs"
+                        v-bind:key="tab"
+                        v-bind:class="['tab-button', { active: currentTab === tab }]"
+                        v-on:click="currentTab = tab"
+                >
+                    {{ tab }}
+                </button>
+            </p>
+            <p>
+                <component v-bind:is="currentTabComponent" class="tab" v-bind:application="application"></component>
+            </p>
         </div>
     </div>
 </template>
 
 <script>
-    import Timeline from "./Chart.vue";
-    import Dashboard from "./Dashboard.vue"
+    import Timeline from "./Timeline/Chart.vue";
+    import Dashboard from "./Dashboard/Dashboard.vue"
     export default {
         name: "Applications",
         components: {
@@ -32,25 +29,16 @@
         },
         data: function() {
             return {
-                applications: [],
                 tabs: ['Dashboard','Timeline'],
                 currentTab: 'Dashboard'
             };
         },
-        mounted() {
-            this.fetchApplicationsList()
-        },
-        methods: {
-            fetchApplicationsList() {
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/').then((response) => {
-                    response.json().then((apps) => {
-                        this.applications = apps;
-                    })
-                });
-            }
+        props: {
+            application: String
         },
         computed: {
             currentTabComponent: function() {
+                console.log('app: ' + this.application);
                 return this.currentTab;
             }
         }
