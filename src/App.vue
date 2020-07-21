@@ -1,34 +1,27 @@
 <template>
   <div id="app">
-    <PackChart :tweetData=loadData />
+    <ApplicationSelect/>
+    <PackChart/>
   </div>
 </template>
 
 <script>
-  import * as d3 from "d3";
 
   import PackChart from "./components/Chart.vue";
+  import ApplicationSelect from "./components/ApplicationSelector.vue"
 
   export default {
     name: "app",
     components: {
-      PackChart
+      PackChart,
+      ApplicationSelect
     },
     data: function() {
       return {
-        loadData: []
+
       };
     },
-    mounted() {
-      console.log("App loaded");
-      this.fetchData();
-    },
-    methods: {
-      async fetchData() {
-        let data = await d3.json("./tweets.json");
-        this.loadData = data;
-      }
-    }
+
   };
 </script>
 
