@@ -1,0 +1,8 @@
+steps:
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    args: ["--dockerfile=./Dockerfile",
+           "--cache=true",
+           "--destination=gcr.io/lorawan-qaware-rosenheim/web-ui:latest"]
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['run', 'deploy', 'web-ui', '--image', 'gcr.io/lorawan-qaware-rosenheim/web-ui', '--region', 'europe-west1', '--platform', 'managed', '--allow-unauthenticated']
