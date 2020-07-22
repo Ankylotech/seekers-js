@@ -1,6 +1,6 @@
 <template>
     <div id="full">
-        <h3>{{name}}</h3>
+        <h3 id="head">{{name}}</h3>
         <Datapoint v-for="(data, index) in deviceData" :key="data.value" :deviceName="name" :value="data" :config="config" :name="index" :hasConfig="hasConfig" />
     </div>
 </template>
@@ -56,6 +56,13 @@
 
 <style scoped>
     #full {
-        margin-left: 10%;
+        grid-column-start: auto;
+        grid-column-end:auto;
+        grid-row-start: auto;
+        grid-row-end: auto;
+
+    }
+    #head {
+        border-bottom: 2px solid black;
     }
 </style>

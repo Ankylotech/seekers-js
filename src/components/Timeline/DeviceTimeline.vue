@@ -1,8 +1,11 @@
 <template>
     <div>
-        <svg v-if="hasLoaded" :id="device">
+        <div id="timeline" v-if="hasLoaded">
+            <h2> {{device}} </h2>
+            <svg  :id="device">
 
-        </svg>
+            </svg>
+        </div>
         <h4 v-else> Loading Device Timeline. Please Wait</h4>
     </div>
 </template>
@@ -14,23 +17,24 @@
         data() {
             return {
                 data: {},
-                hasLoaded: false
+                hasLoaded: true
             };
         },
         props: {
             application: String,
-            device: String
+            device: String,
+            colors: Object
         },
         methods: {
             getChart: function () {
-                Object.values(this.data).forEach((data) => {
-                    console.log(data)
-                    let margin = ({top: 20, right: 30, bottom: 30, left: 40})
-                    let height = 200
-                    let width = 500
-                    let selector = "#" + this.device;
-                    let svg;
-                    svg = d3.select(selector);
+                const selector = "#" + this.device;
+                let svg = d3.select(selector);
+                svg.empty();
+                Object.keys(this.data).forEach((key) => {
+                    let data = this.data[key];
+                    const margin = ({top: 20, right: 40, bottom: 30, left: 40});
+                    const height = 120;
+                    const width = 400;
                     svg.attr("viewBox", [0, 0, width, height]);
                     let yAxis = g => g
                         .attr("transform", `translate(${margin.left},0)`)
@@ -60,22 +64,23 @@
 
                     svg.append("g")
                         .call(yAxis);
+                    let color = this.colors[key];
+                    console.log(key + "-" + color)
+                    if(!color) color = "steelblue";
 
                     svg.append("path")
                         .datum(data)
                         .attr("fill", "none")
-                        .attr("stroke", "steelblue")
-                        .attr("stroke-width", 1.5)
+                        .attr("stroke", color)
+                        .attr("stroke-width", 0.5)
                         .attr("stroke-linejoin", "round")
                         .attr("stroke-linecap", "round")
                         .attr("d", line);
                 })
             },
             getData: async function(application = this.application){
-                this.hasLoaded = false;
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices/' + this.device).then((response) => {
                     response.json().then((applicationData) => {
-                        this.hasLoaded = true;
                         for(let i = 0; i < applicationData.length; i++){
                             let datapoint = applicationData[i];
                             let date = datapoint.uploadedAt._seconds;
@@ -100,13 +105,13 @@
 </script>
 
 <style>
-    .range-input {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 10px;
+    #timeline {
+        border: 4px solid black;
     }
     input {
         margin-left: 10px;
+    }
+    .axis + .axis g text {
+        display: none;
     }
 </style>

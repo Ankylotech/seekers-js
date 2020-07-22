@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div v-if="hasLoadedApp && hasLoadedConf">
-            <DeviceTimeline v-for="device in devices" :key="device" :application="application" :device="device"></DeviceTimeline>
+        <div v-if="hasLoadedApp">
+            <DeviceTimeline v-for="device in devices" :key="device" :colors="colors" :application="application" :device="device"></DeviceTimeline>
         </div>
         <div v-else>
-            <h4> Loading Data, please Wait</h4>
+            <h4> Loading Devices, please Wait</h4>
         </div>
     </div>
 </template>
@@ -23,9 +23,9 @@
         data: function() {
             return {
                 hasLoadedApp: false,
-                hasLoadedConf: false,
                 devices: [],
-                configs: {}
+                configs: {},
+                colors: {co2: "grey",temperature: "orange", humidity: "light-blue", light: "yellow", motion: "red"}
             }
         },
         mounted() {
@@ -34,19 +34,11 @@
         },
         methods: {
             async fetchData(application = this.application) {
-                this.hasLoadedConf = false;
                 this.hasLoadedApp = false;
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices').then((response) => {
                     response.json().then((applicationData) => {
                         this.hasLoadedApp = true;
                         this.devices = applicationData;
-                        console.log(applicationData)
-                    })
-                });
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/config/' + application).then((response) => {
-                    response.json().then((configData) => {
-                        this.configs = configData;
-                        this.hasLoadedConf = true;
                     })
                 });
             }

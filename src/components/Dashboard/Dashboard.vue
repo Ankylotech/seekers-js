@@ -2,7 +2,7 @@
     <div ref="scope">
         <h3> {{application}}</h3>
         <div id="panels" v-if="hasLoadedApp && hasLoadedConf">
-            <DevicePanel  v-for="device in deviceData" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
+            <DevicePanel id="panel" v-for="device in deviceData" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
         </div>
         <div v-else>
             <h1>Loading. Please wait.</h1>
@@ -71,6 +71,14 @@
 
 <style scoped>
     #panels {
-        display:flex;
+
+        display: grid;
+        grid-template-columns: repeat(4, auto [col-start]);
+        grid-gap: 5%;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    #panel {
+        border: 4px solid black;
     }
 </style>
