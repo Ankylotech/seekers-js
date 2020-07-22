@@ -3,8 +3,8 @@
         <div id="timeline" v-if="hasLoaded">
             <h2> {{device}} </h2>
             <span v-for="value in values" :key="value">
-                <input checked type="checkbox" :id="value" :value="value" v-model="showTimeline" >
-                <label :for="value">{{value}}</label>
+                <input checked type="checkbox"  :value="value" v-model="showTimeline" >
+                <label :id="value" :for="value">{{value}}</label>
             </span>
             <br>
             <svg  :id="device">
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-    import * as d3 from "d3";
+    const d3 = require('d3');
 
     export default {
         data() {
@@ -63,11 +63,11 @@
                             .attr("transform", `translate(0,${height - margin.bottom})`)
                             .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
                         let x = d3.scaleUtc()
-                            .domain(d3.extent(data, d => d.date))
+                            .domain(d3.extent(data, d => new Date(1970,1,1,16).setSeconds(d.date)))
                             .range([margin.left, width - margin.right])
                         let line = d3.line()
                             .defined(d => !isNaN(d.value))
-                            .x(d => x(d.date))
+                            .x(d => x(new Date(1970,1,1,16).setSeconds(d.date)))
                             .y(d => y(d.value))
 
                         svg.append("g")
@@ -75,20 +75,18 @@
 
                         svg.append("g")
                             .call(yAxis);
-                        let color = this.colors[key];
-                        console.log(key + "-" + color)
-                        if (!color) color = "steelblue";
 
                         svg.append("path")
                             .datum(data)
                             .attr("fill", "none")
-                            .attr("stroke", color)
+                            .attr("stroke", this.color(key))
                             .attr("stroke-width", 0.75)
                             .attr("stroke-linejoin", "round")
                             .attr("stroke-linecap", "round")
                             .attr("d", line);
                     }
                 })
+                this.color("blue");
             },
             getData: async function(application = this.application){
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices/' + this.device).then((response) => {
@@ -109,11 +107,21 @@
                     })
                 });
 
+            },
+            color: function(value){
+                let color = this.colors[value];
+                if (!color) color = "steelblue";
+                for(let i = 0; i < this.values.length; i++){
+                    let value = this.values[i];
+                    d3.select('#'+value).style('color',this.colors[value]).attr("vector-effect", "non-scaling-stroke");
+                }
+                return color;
             }
 
         },
         mounted() {
             this.getData();
+            this.color();
         }
     };
 </script>
@@ -127,5 +135,9 @@
     }
     .axis + .axis g text {
         display: none;
+    }
+    label {
+        font-size: 30px;
+        -webkit-text-stroke: 1px gray;
     }
 </style>

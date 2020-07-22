@@ -6,7 +6,7 @@
 </template>
 
 <script>
-    import Datapoint from "./Line.vue"
+    import Datapoint from "./Datapoint.vue"
     export default {
         components: {
             Datapoint
