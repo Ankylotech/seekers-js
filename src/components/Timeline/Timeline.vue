@@ -25,7 +25,7 @@
                 hasLoadedApp: false,
                 devices: [],
                 configs: {},
-                colors: {co2: "grey",temperature: "orange", humidity: "light-blue", light: "yellow", motion: "red"}
+                colors: {co2: "grey",temperature: "orange", humidity: "lightblue", light: "yellow", motion: "red"}
             }
         },
         mounted() {
