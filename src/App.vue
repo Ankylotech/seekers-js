@@ -2,7 +2,7 @@
   <div id="app">
     <p v-if="hasApplication">
       <label for="applications">Choose an Application:  </label>
-      <select name="applications" id="applications" v-model="applicationName">
+      <select name="applications" id="applications" v-model="applicationName" @change="emitMsg">
         <option v-for="apps in applications" :key="apps" :value="apps">
           {{apps}}
         </option>
@@ -19,6 +19,7 @@
 <script>
 
   import DataPresenter from "./components/Applications.vue"
+  import {EventBus} from "./components/event-bus.js"
 
   export default {
     name: "app",
@@ -44,6 +45,9 @@
             this.hasApplication = true;
           })
         });
+      },
+      emitMsg(){
+        EventBus.$emit('application-change',this.applicationName);
       }
     },
 

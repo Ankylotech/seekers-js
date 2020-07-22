@@ -1,7 +1,7 @@
 <template>
-    <div >
-        <div id="panels" v-if="hasLoaded">
-            <DevicePanel v-for="device in deviceData" :key="device.name" :raw-data="device"></DevicePanel>
+    <div ref="scope">
+        <div id="panels" v-if="hasLoadedApp && hasLoadedConf">
+            <DevicePanel v-for="device in deviceData" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
         </div>
         <div v-else>
             <h1>Loading. Please wait.</h1>
@@ -11,6 +11,7 @@
 
 <script>
     import DevicePanel from "./DevicePanel.vue"
+    import {EventBus} from "../event-bus"
     export default {
         name: "Dashboard",
         props: {
@@ -21,22 +22,26 @@
         },
         data: function() {
             return {
-                hasLoaded: false,
+                hasLoadedApp: false,
+                hasLoadedConf: false,
                 deviceData: {},
-                applicationID: 0
+                applicationID: 0,
+                configs: {}
             }
         },
         mounted() {
             this.fetchData();
-
+            EventBus.$on('application-change', this.fetchData);
         },
         methods: {
-            async fetchData() {
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + this.application).then((response) => {
+            async fetchData(application = this.application) {
+                this.hasLoadedConf = false;
+                this.hasLoadedApp = false;
+                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application).then((response) => {
                     response.json().then((applicationData) => {
-                        this.hasLoaded = true;
-                        this.applicationID = applicationData[0].applicationID;
-                        let rawData = applicationData[0].devices
+                        this.hasLoadedApp = true;
+                        this.applicationID = applicationData.applicationID;
+                        let rawData = applicationData.devices
                         const sortable = [];
                         for (let device in rawData) {
                             sortable.push([device, rawData[device]]);
@@ -50,6 +55,12 @@
                             data[item[0]]=item[1]
                         });
                         this.deviceData = data;
+                    })
+                });
+                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/config/' + application).then((response) => {
+                    response.json().then((configData) => {
+                        this.configs = configData;
+                        this.hasLoadedConf = true;
                     })
                 });
             }

@@ -12,7 +12,7 @@
                 </button>
             </p>
             <p>
-                <component v-bind:is="currentTabComponent" class="tab" v-bind:application="application"></component>
+                <component v-on:application-change="application=$event" v-bind:is="currentTabComponent" class="tab" v-bind:application="application"></component>
             </p>
         </div>
     </div>
