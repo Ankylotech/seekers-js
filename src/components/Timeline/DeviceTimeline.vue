@@ -95,7 +95,7 @@
                             let datapoint = applicationData[i];
                             let date = datapoint.uploadedAt._seconds;
                             delete datapoint.uploadedAt;
-                            Object.keys(datapoint).forEach((key) => {
+                            Object.keys(datapoint).sort().forEach((key) => {
                                 if(!this.values.includes(key)) {
                                     this.values.push(key);
                                 }
