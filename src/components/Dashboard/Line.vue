@@ -25,7 +25,7 @@
         mounted() {
             if(this.hasConfig){
                 if(this.name === 'co2'){
-                    if(this.config[0]["device-config"][this.deviceName]) {
+                    if(this.config[0] != null &&this.config[0]["device-config"][this.deviceName]) {
                         if (parseInt(this.value) > this.config[0]["device-config"][this.deviceName]["error-threshold"]) this.isRed = true;
                         else if (parseInt(this.value) > this.config[0]["device-config"][this.deviceName]["warn-threshold"]) this.isOrange = true;
                     }else {
@@ -33,8 +33,7 @@
                         else if (parseInt(this.value) > 1400) this.isOrange = true;
                     }
                 }else if(this.name === 'temperature'){
-                    console.log(this.config[1])
-                    if(this.config[1]["device-config"][this.deviceName]) {
+                    if(this.config[1] != null && this.config[1]["device-config"][this.deviceName]) {
                         if (parseInt(this.value) < this.config[1]["device-config"][this.deviceName]["lower-warning"]) this.isRed = true;
                         else if (parseInt(this.value) > this.config[1]["device-config"][this.deviceName]["upper-warning"]) this.isRed = true;
                     }else {

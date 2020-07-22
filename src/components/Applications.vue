@@ -11,9 +11,12 @@
                     {{ tab }}
                 </button>
             </p>
-            <p>
-                <component v-on:application-change="application=$event" v-bind:is="currentTabComponent" class="tab" v-bind:application="application"></component>
-            </p>
+            <div>
+                <keep-alive>
+                    <Dashboard v-if="currentTabComponent==='Dashboard'" :application="application"/>
+                    <Timeline v-else :application="application"/>
+                </keep-alive>
+            </div>
         </div>
     </div>
 </template>
@@ -38,7 +41,6 @@
         },
         computed: {
             currentTabComponent: function() {
-                console.log('app: ' + this.application);
                 return this.currentTab;
             }
         }
