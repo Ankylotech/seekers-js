@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import Timeline from "./Timeline/Chart.vue";
+    import Timeline from "./Timeline/Timeline.vue";
     import Dashboard from "./Dashboard/Dashboard.vue"
     export default {
         name: "Applications",

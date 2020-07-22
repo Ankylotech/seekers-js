@@ -1,7 +1,8 @@
 <template>
     <div ref="scope">
+        <h3> {{application}}</h3>
         <div id="panels" v-if="hasLoadedApp && hasLoadedConf">
-            <DevicePanel v-for="device in deviceData" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
+            <DevicePanel  v-for="device in deviceData" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
         </div>
         <div v-else>
             <h1>Loading. Please wait.</h1>
