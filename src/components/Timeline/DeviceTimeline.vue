@@ -3,7 +3,7 @@
         <v-card id="timeline" v-if="hasLoaded">
             <v-card-text id="devicename" > {{device}} </v-card-text>
             <v-row v-if="values.length > 0" justify="space-around">
-                <v-checkbox v-for="value in values" :key="value"  :color="color(value)" :label="value" :value="value" v-model="showTimeline" ></v-checkbox>
+                <v-checkbox v-for="value in values" :key="value" :class="color(value) + '--text'"  :color="color(value)" :label="value" :value="value" v-model="showTimeline" ></v-checkbox>
             </v-row>
             <v-card-text v-else> Loading Device Data. Please Wait</v-card-text>
             <svg  :id="device">

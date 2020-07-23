@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-list-item color="red"  v-if="isRed">{{name}} : {{value}}! </v-list-item>
-        <v-list-item color="#ffa500" v-else-if="isOrange">{{name}} : {{value}}.</v-list-item>
+        <v-list-item class="red--text" color="red" id="red" v-if="isRed">{{name}} : {{value}}! </v-list-item>
+        <v-list-item color="#ffa500" id="orange" v-else-if="isOrange">{{name}} : {{value}}.</v-list-item>
         <v-list-item v-else>{{name}} : {{value}}</v-list-item>
     </div>
 </template>
@@ -48,4 +48,8 @@
 </script>
 
 <style scoped>
+    #red {
+        fill: #ff0000;
+        color: red;
+    }
 </style>

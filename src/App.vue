@@ -3,32 +3,88 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <div v-if="hasApplication">
-      <v-app-bar app id="parts" class="head" height="100px">
-        <v-select v-model="applicationName"
-                    :items="applications"
-                    label="Select an Application"
-                    @change="emitMsg"/>
-        <v-spacer/>
+
+      <v-app-bar app
+                 id="parts"
+                 class="head"
+                 absolute
+                 color="#28537D"
+                 dark
+                 shrink-on-scroll
+                 src="/src/assets/qaw-stage-home.png"
+                  fade-img-on-scroll>
+
+        <v-card color="#28537D">
+          <slot>
+          <v-btn @click="drawer = true"><v-icon>mdi-format-list-bulleted-square</v-icon> select Application </v-btn>
+          </slot>
+        </v-card>
+        <v-row>
+
+        </v-row>
         <v-spacer/>
         <v-toolbar-title> {{applicationName}}</v-toolbar-title>
         <v-spacer/>
-        <v-spacer/>
+        <v-spacer/><v-spacer/>
+
+        <template v-slot:img="{ props }">
+          <v-img
+                  v-bind="props"
+          ></v-img>
+        </template>
+
+
+
         <template v-slot:extension>
           <v-tabs align-with-title grow>
             <v-tab v-for="tab in tabs" :key="tab" v-on:click="currentTab = tab">{{tab}}</v-tab>
           </v-tabs>
         </template>
       </v-app-bar>
+
+
       <v-main>
         <keep-alive>
           <Dashboard v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
           <Timeline v-else :application="applicationName" :ID="applicationID"/>
         </keep-alive>
       </v-main>
+
     </div>
     <h1 v-else>
        Loading Applications. Please Wait.
     </h1>
+
+    <v-navigation-drawer
+            v-model="drawer"
+            color="blue"
+            absolute
+            dark
+            temporary
+    >
+      <v-list
+              dense
+              nav
+              class="py-0"
+      >
+        <v-list-item class="px-0">
+          <v-list-item-content>
+            <v-list-item-title>Select Application</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider></v-divider>
+        <v-list-item-group
+                active-class="white--text text--accent-4">
+          <v-list-item v-for="application in applications" :key="application">
+            <v-list-item-content @click="emitMsg(application)">
+              <v-list-item-title>{{ application }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+
   </v-app>
 </template>
 
@@ -51,7 +107,8 @@
         applicationID: String,
         hasApplication : false,
         tabs: ['Dashboard','Timeline'],
-        currentTab: 'Dashboard'
+        currentTab: 'Dashboard',
+        drawer: false
       };
     },
     mounted() {
@@ -76,7 +133,9 @@
           })
         });
       },
-      emitMsg(){
+      emitMsg(application){
+        this.applicationName = application;
+        this.drawer = false;
         for(let i = 0;i < this.applications.length; i++){
           if(this.applications[i] === this.applicationName){
             this.applicationID = this.applicationIDs[i];
@@ -90,20 +149,5 @@
 </script>
 
 <style scoped>
-  label {
-    font-size: 30px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    padding-left: 20px;
-  }
-  select {
-    font-size: 20px;
-    padding-left: 20px;
-  }
-  #parts {
-    border: 2px solid black;
-    margin-top: 40px;
-    font-size: 50px;
-  }
+
 </style>

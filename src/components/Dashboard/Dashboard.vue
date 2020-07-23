@@ -19,7 +19,7 @@
     export default {
         name: "Dashboard",
         props: {
-            application: String ,
+            application: String,
             ID: String
         },
         components: {
