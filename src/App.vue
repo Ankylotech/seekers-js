@@ -57,7 +57,7 @@
 
     <v-navigation-drawer
             v-model="drawer"
-            color="blue"
+            color="#28537D"
             absolute
             dark
             temporary
