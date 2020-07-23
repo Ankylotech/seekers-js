@@ -1,8 +1,9 @@
 <template>
-    <div id="full">
-        <h3 id="head">{{name}}</h3>
-        <Datapoint v-for="(data, index) in deviceData" :key="data.value" :deviceName="name" :value="data" :config="config" :name="index" :hasConfig="hasConfig" />
-    </div>
+    <v-card id="full" class="pa-4">
+        <v-card-title>{{name}}</v-card-title>
+        <v-divider light/>
+        <Datapoint  v-for="(data, index) in deviceData" :key="data.value" :deviceName="name" :value="data" :config="config" :name="index" :hasConfig="hasConfig" />
+    </v-card>
 </template>
 
 <script>
@@ -61,8 +62,5 @@
         grid-row-start: auto;
         grid-row-end: auto;
 
-    }
-    #head {
-        border-bottom: 2px solid black;
     }
 </style>

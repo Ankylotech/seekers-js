@@ -1,13 +1,12 @@
 <template>
-    <div>
-        <h2> {{application}}</h2>
-        <div v-if="hasLoadedApp">
+    <v-card class="pa-4">
+        <div v-if="hasLoadedApp" id="grid" class="pa-4">
             <DeviceTimeline v-for="device in devices" :key="device" :colors="colors" :application="ID" :device="device"></DeviceTimeline>
         </div>
         <div v-else>
             <h4> Loading Devices, please Wait</h4>
         </div>
-    </div>
+    </v-card>
 </template>
 
 <script>
@@ -27,7 +26,7 @@
                 hasLoadedApp: false,
                 devices: [],
                 configs: {},
-                colors: {co2: "red",temperature: "blue", humidity: "aqua", light: "orange", motion: "darkolivegreen"}
+                colors: {co2: "red",temperature: "blue", humidity: "#00ffff", light: "orange", motion: "#556b2f"}
             }
         },
         mounted() {

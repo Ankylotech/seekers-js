@@ -1,36 +1,47 @@
 <template>
-  <div id="app">
+  <v-app id="app" >
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <div v-if="hasApplication">
-      <div id="parts">
-        <br>
-        <label for="applications">Choose an Application: <br> </label>
-        <select name="applications" id="applications" v-model="applicationName" @change="emitMsg">
-          <option v-for="apps in applications" :key="apps" :value="apps">
-            {{apps}}
-          </option>
-        </select>
-        <br>
-        <br>
-      </div>
-      <div>
-        <DataPresenter :application="applicationName" :ID="applicationID" />
-      </div>
+      <v-app-bar app id="parts" class="head" height="100px">
+        <v-select v-model="applicationName"
+                    :items="applications"
+                    label="Select an Application"
+                    @change="emitMsg"/>
+        <v-spacer/>
+        <v-spacer/>
+        <v-toolbar-title> {{applicationName}}</v-toolbar-title>
+        <v-spacer/>
+        <v-spacer/>
+        <template v-slot:extension>
+          <v-tabs align-with-title grow>
+            <v-tab v-for="tab in tabs" :key="tab" v-on:click="currentTab = tab">{{tab}}</v-tab>
+          </v-tabs>
+        </template>
+      </v-app-bar>
+      <v-main>
+        <keep-alive>
+          <Dashboard v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
+          <Timeline v-else :application="applicationName" :ID="applicationID"/>
+        </keep-alive>
+      </v-main>
     </div>
     <h1 v-else>
        Loading Applications. Please Wait.
     </h1>
-  </div>
+  </v-app>
 </template>
 
 <script>
 
-  import DataPresenter from "./components/Applications.vue"
+  import Dashboard from "./components/Dashboard/Dashboard.vue"
+  import Timeline from "./components/Timeline/Timeline.vue"
   import {EventBus} from "./components/event-bus.js"
-
   export default {
     name: "app",
     components: {
-      DataPresenter
+      Dashboard,
+      Timeline
     },
     data: function() {
       return {
@@ -38,17 +49,17 @@
         applicationIDs: [],
         applicationName: String,
         applicationID: String,
-        hasApplication : false
+        hasApplication : false,
+        tabs: ['Dashboard','Timeline'],
+        currentTab: 'Dashboard'
       };
     },
     mounted() {
       this.fetchApplicationsList()
     },
-    updated() {
-      for(let i = 0;i < this.applications.length; i++){
-        if(this.applications[i] === this.applicationName){
-          this.applicationID = this.applicationIDs[i];
-        }
+    computed: {
+      currentTabComponent: function() {
+        return this.currentTab;
       }
     },
     methods: {
@@ -66,23 +77,19 @@
         });
       },
       emitMsg(){
-        EventBus.$emit('application-change',this.applicationName);
+        for(let i = 0;i < this.applications.length; i++){
+          if(this.applications[i] === this.applicationName){
+            this.applicationID = this.applicationIDs[i];
+          }
+        }
+        EventBus.$emit('application-change',this.applicationID);
       }
     },
 
   };
 </script>
 
-<style>
-  #app {
-    font-family: "Avenir", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    margin-top: 60px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
+<style scoped>
   label {
     font-size: 30px;
     font-weight: bold;
@@ -97,5 +104,6 @@
   #parts {
     border: 2px solid black;
     margin-top: 40px;
+    font-size: 50px;
   }
 </style>

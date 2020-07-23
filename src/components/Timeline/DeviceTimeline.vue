@@ -1,18 +1,16 @@
 <template>
     <div>
-        <div id="timeline" v-if="hasLoaded">
-            <br>
-            <span id="Deviename"> {{device}} </span>
-            <span v-for="value in values" :key="value">
-                <input checked type="checkbox"  :value="value" v-model="showTimeline" >
-                <label :id="value" :for="value">{{value}}</label>
-            </span>
-            <br>
+        <v-card id="timeline" v-if="hasLoaded">
+            <v-card-text id="devicename" > {{device}} </v-card-text>
+            <v-row v-if="values.length > 0" justify="space-around">
+                <v-checkbox v-for="value in values" :key="value"  :color="color(value)" :label="value" :value="value" v-model="showTimeline" ></v-checkbox>
+            </v-row>
+            <v-card-text v-else> Loading Device Data. Please Wait</v-card-text>
             <svg  :id="device">
-                Loading, please Wait
             </svg>
-        </div>
+        </v-card>
         <h4 v-else> Loading Device Timeline. Please Wait</h4>
+        <v-divider/>
     </div>
 </template>
 
@@ -120,7 +118,7 @@
             },
             color: function(value){
                 let color = this.colors[value];
-                if (!color) color = "steelblue";
+                if (!color) color = "#4682b4";
                 return color;
             }
 
@@ -133,12 +131,7 @@
 </script>
 
 <style scoped>
-    #timeline {
-        border: 2px solid black;
-        padding-bottom: 10px;
-    }
-
-    #Deviename {
+    #devicename {
         font-size: 40px;
         font-weight: bold;
         padding-left: 20px;
@@ -151,11 +144,6 @@
     .axis + .axis g text {
         display: none;
     }
-    label {
-        font-size: 30px;
-        -webkit-text-stroke: 1px gray;
-        color: steelblue;
-    }
     #co2 {
         color: red;
     }
@@ -163,12 +151,12 @@
         color: blue;
     }
     #humidity {
-        color: aqua;
+        color: #00ffff;
     }
     #light {
         color: orange;
     }
     #motion {
-        color: darkolivegreen;
+        color: #556b2f;
     }
 </style>

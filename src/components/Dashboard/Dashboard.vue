@@ -1,13 +1,16 @@
 <template>
-    <div>
-        <h2> {{application}}</h2>
-        <div id="panels" v-if="hasLoadedApp && hasLoadedConf">
-            <DevicePanel id="panel" v-for="device in deviceData" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
-        </div>
-        <div v-else>
-            <h1>Loading. Please wait.</h1>
-        </div>
-    </div>
+    <v-card class="pa-4">
+        <v-container v-if="hasLoadedConf && hasLoadedApp">
+            <v-row class="pa-4">
+                <v-col md="3" v-for="device in deviceData" :key="device.name" >
+                    <v-spacer/>
+                    <DevicePanel class="pa-4" id="panel" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
+                    <v-spacer/>
+                </v-col>
+            </v-row>
+        </v-container>
+        <h2 v-else>Loading Devices. Please Wait.</h2>
+    </v-card>
 </template>
 
 <script>
@@ -16,7 +19,7 @@
     export default {
         name: "Dashboard",
         props: {
-            application: String,
+            application: String ,
             ID: String
         },
         components: {
@@ -26,9 +29,9 @@
             return {
                 hasLoadedApp: false,
                 hasLoadedConf: false,
-                deviceData: {},
+                deviceData:{},
                 applicationID: 0,
-                configs: {}
+                configs: []
             }
         },
         mounted() {
@@ -65,27 +68,15 @@
                         this.hasLoadedConf = true;
                     })
                 });
+            },
+            randomString(row){
+                console.log(row);
+                return Math.random().toString(36).substring(7);
             }
         }
     }
 </script>
 
 <style scoped>
-    #panels {
-        display: grid;
-        grid-template-columns: repeat(4, auto [col-start]);
-        grid-gap: 5%;
-        margin-left: 10%;
-        margin-right: 10%;
-        margin-bottom: 10px;
-        padding: 10px 10px 50px 10px;
-        border: 2px solid black;
-    }
-    #panel {
-        border: 4px solid black;
-        text-align: center;
-    }
-    h2 {
-        padding-left: 20px;
-    }
+
 </style>
