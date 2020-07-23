@@ -8,7 +8,7 @@
             </span>
             <br>
             <svg  :id="device">
-
+                Loading, please Wait
             </svg>
         </div>
         <h4 v-else> Loading Device Timeline. Please Wait</h4>
@@ -24,7 +24,8 @@
                 data: {},
                 hasLoaded: true,
                 showTimeline: [],
-                values: []
+                values: [],
+                dateBorders: {}
             };
         },
         props: {
@@ -40,60 +41,68 @@
                 const selector = "#" + this.device;
                 let svg = d3.select(selector);
                 svg.selectAll('*').remove();
+                const margin = ({top: 20, right: 40, bottom: 30, left: 40});
+                const height = 120;
+                const width = 400;
+                svg.attr("viewBox", [0, 0, width, height]);
+                let yAxis = g => g
+                    .attr("transform", `translate(${margin.left},0)`)
+                    .call(d3.axisLeft(y).ticks(height/40))
+                let y = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([height - margin.bottom, margin.top])
+
+                let xAxis = g => g
+                    .attr("transform", `translate(0,${height - margin.bottom})`)
+                    .call(d3.axisBottom(x).ticks(width / 60).tickSizeOuter(0))
+                let x = d3.scaleUtc()
+                    .domain([this.dateBorders.min,this.dateBorders.max])
+                    .range([margin.left, width - margin.right])
+
+                svg.append("g")
+                    .call(yAxis);
+
+                svg.append("g")
+                    .call(xAxis);
                 Object.keys(this.data).forEach((key) => {
                     if(this.showTimeline.includes(key)) {
                         let data = this.data[key];
-                        const margin = ({top: 20, right: 40, bottom: 30, left: 40});
-                        const height = 120;
-                        const width = 400;
-                        svg.attr("viewBox", [0, 0, width, height]);
-                        let yAxis = g => g
-                            .attr("transform", `translate(${margin.left},0)`)
-                            .call(d3.axisLeft(y).tickValues([]))
-                            .call(g => g.select(".domain").remove())
-                            .call(g => g.select(".tick:last-of-type text").clone()
-                                .attr("x", 3)
-                                .attr("text-anchor", "start")
-                                .attr("font-weight", "bold")
-                                .text(data.y))
-                        let y = d3.scaleLinear()
-                            .domain([0, d3.max(data, d => d.value)]).nice()
-                            .range([height - margin.bottom, margin.top])
-                        let xAxis = g => g
-                            .attr("transform", `translate(0,${height - margin.bottom})`)
-                            .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
-                        let x = d3.scaleUtc()
-                            .domain(d3.extent(data, d => new Date(1970,0,1,4).setSeconds(d.date)))
-                            .range([margin.left, width - margin.right])
+                        let min = d3.min(data, d => d.value);
+                        let max = d3.max(data, d => d.value);
+
+
+                        data.forEach((datapoint) => {
+                            if(min !== max) datapoint.value = (datapoint.value-min)*100/(max-min);
+                            else datapoint.value = 50;
+                        })
+
+
                         let line = d3.line()
                             .defined(d => !isNaN(d.value))
-                            .x(d => x(new Date(1970,0,1,4).setSeconds(d.date)))
+                            .x(d => x(d.date))
                             .y(d => y(d.value))
 
-                        svg.append("g")
-                            .call(xAxis);
-
-                        svg.append("g")
-                            .call(yAxis);
 
                         svg.append("path")
                             .datum(data)
                             .attr("fill", "none")
-                            .attr("stroke", this.color(key))
                             .attr("stroke-width", 0.75)
                             .attr("stroke-linejoin", "round")
                             .attr("stroke-linecap", "round")
-                            .attr("d", line);
+                            .attr("d", line)
+                            .attr("stroke", this.color(key))
+                            .attr("id",key);
                     }
                 })
-                this.color("blue");
             },
             getData: async function(application = this.application){
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices/' + this.device).then((response) => {
                     response.json().then((applicationData) => {
                         for(let i = 0; i < applicationData.length; i++){
                             let datapoint = applicationData[i];
-                            let date = datapoint.uploadedAt._seconds;
+                            let date = new Date(1970,0,1,4).setSeconds(datapoint.uploadedAt._seconds);
+                            if(!this.dateBorders.min || date < this.dateBorders.min) this.dateBorders.min = date;
+                            if(!this.dateBorders.max || date > this.dateBorders.max) this.dateBorders.max = date;
                             delete datapoint.uploadedAt;
                             Object.keys(datapoint).sort().forEach((key) => {
                                 if(!this.values.includes(key)) {
@@ -111,10 +120,6 @@
             color: function(value){
                 let color = this.colors[value];
                 if (!color) color = "steelblue";
-                for(let i = 0; i < this.values.length; i++){
-                    let value = this.values[i];
-                    d3.select('#'+value).style('color',this.colors[value]).attr("vector-effect", "non-scaling-stroke");
-                }
                 return color;
             }
 
@@ -130,6 +135,7 @@
     #timeline {
         border: 4px solid black;
     }
+
     input {
         margin-left: 10px;
     }
@@ -139,5 +145,21 @@
     label {
         font-size: 30px;
         -webkit-text-stroke: 1px gray;
+        color: steelblue;
+    }
+    #co2 {
+        color: red;
+    }
+    #temperature {
+        color: blue;
+    }
+    #humidity {
+        color: aqua;
+    }
+    #light {
+        color: orange;
+    }
+    #motion {
+        color: darkolivegreen;
     }
 </style>
