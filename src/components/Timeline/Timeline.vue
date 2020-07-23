@@ -2,7 +2,7 @@
     <div>
         <h2> {{application}}</h2>
         <div v-if="hasLoadedApp">
-            <DeviceTimeline v-for="device in devices" :key="device" :colors="colors" :application="application" :device="device"></DeviceTimeline>
+            <DeviceTimeline v-for="device in devices" :key="device" :colors="colors" :application="ID" :device="device"></DeviceTimeline>
         </div>
         <div v-else>
             <h4> Loading Devices, please Wait</h4>
@@ -19,7 +19,8 @@
             DeviceTimeline
         },
         props: {
-            application: String
+            application: String,
+            ID: String
         },
         data: function() {
             return {
@@ -34,15 +35,13 @@
             EventBus.$on('application-change', this.fetchData);
         },
         methods: {
-            async fetchData(application = this.application) {
+            async fetchData(application = this.ID) {
                 this.hasLoadedApp = false;
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices').then((response) => {
                     response.json().then((applicationData) => {
                         this.hasLoadedApp = true;
                         const sortable = applicationData;
-                        console.log(sortable)
                         sortable.sort();
-                        console.log(sortable)
                         this.devices = sortable;
                     })
                 });

@@ -13,7 +13,7 @@
         <br>
       </div>
       <div>
-        <DataPresenter :application="applicationName" />
+        <DataPresenter :application="applicationName" :ID="applicationID" />
       </div>
     </div>
     <h1 v-else>
@@ -35,26 +35,38 @@
     data: function() {
       return {
         applications: [],
+        applicationIDs: [],
         applicationName: String,
+        applicationID: String,
         hasApplication : false
       };
     },
     mounted() {
       this.fetchApplicationsList()
     },
+    updated() {
+      for(let i = 0;i < this.applications.length; i++){
+        if(this.applications[i] === this.applicationName){
+          this.applicationID = this.applicationIDs[i];
+        }
+      }
+    },
     methods: {
       fetchApplicationsList() {
         fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/').then((response) => {
           response.json().then((apps) => {
-            this.applications = apps;
-            this.applicationName = apps[0];
+            for(let i = 0;i < apps.length; i++){
+              this.applications.push(apps[i][1]);
+              this.applicationIDs.push(apps[i][0]);
+            }
+            this.applicationName = apps[0][1];
+            this.applicationID = apps[0][0];
             this.hasApplication = true;
           })
         });
       },
       emitMsg(){
         EventBus.$emit('application-change',this.applicationName);
-
       }
     },
 

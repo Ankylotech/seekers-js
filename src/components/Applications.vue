@@ -10,8 +10,8 @@
                     {{ tab }}
                 </button>
                 <keep-alive>
-                    <Dashboard v-if="currentTabComponent==='Dashboard'" :application="application"/>
-                    <Timeline v-else :application="application"/>
+                    <Dashboard v-if="currentTabComponent==='Dashboard'" :application="application" :ID="ID"/>
+                    <Timeline v-else :application="application" :ID="ID"/>
                 </keep-alive>
         </div>
     </div>
@@ -33,7 +33,8 @@
             };
         },
         props: {
-            application: String
+            application: String,
+            ID: String
         },
         computed: {
             currentTabComponent: function() {

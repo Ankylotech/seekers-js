@@ -16,7 +16,8 @@
     export default {
         name: "Dashboard",
         props: {
-            application: String
+            application: String,
+            ID: String
         },
         components: {
             DevicePanel
@@ -35,7 +36,7 @@
             EventBus.$on('application-change', this.fetchData);
         },
         methods: {
-            async fetchData(application = this.application) {
+            async fetchData(application = this.ID) {
                 this.hasLoadedConf = false;
                 this.hasLoadedApp = false;
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application).then((response) => {
