@@ -134,7 +134,8 @@
 
 <style scoped>
     #timeline {
-        border: 4px solid black;
+        border: 2px solid black;
+        padding-bottom: 10px;
     }
 
     #Deviename {

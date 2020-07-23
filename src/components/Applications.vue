@@ -9,12 +9,10 @@
                 >
                     {{ tab }}
                 </button>
-            <div id="parts">
                 <keep-alive>
                     <Dashboard v-if="currentTabComponent==='Dashboard'" :application="application"/>
                     <Timeline v-else :application="application"/>
                 </keep-alive>
-            </div>
         </div>
     </div>
 </template>
@@ -48,7 +46,7 @@
 
 <style scoped>
     .tab-button {
-        padding: 6px 200px;
+        padding: 4px 200px;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
         border: 1px solid darkslategray;
