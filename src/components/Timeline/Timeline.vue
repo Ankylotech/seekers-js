@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h2> {{application}}</h2>
         <div v-if="hasLoadedApp">
             <DeviceTimeline v-for="device in devices" :key="device" :colors="colors" :application="application" :device="device"></DeviceTimeline>
         </div>
@@ -51,5 +52,7 @@
 </script>
 
 <style scoped>
-
+    h2 {
+        padding-left: 20px;
+    }
 </style>

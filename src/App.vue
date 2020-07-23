@@ -1,18 +1,24 @@
 <template>
   <div id="app">
-    <p v-if="hasApplication">
-      <label for="applications">Choose an Application:  </label>
-      <select name="applications" id="applications" v-model="applicationName" @change="emitMsg">
-        <option v-for="apps in applications" :key="apps" :value="apps">
-          {{apps}}
-        </option>
-      </select>
-
-      <DataPresenter :application="applicationName" />
-    </p>
-    <p v-else>
-       Loading Data. Please Wait.
-    </p>
+    <div v-if="hasApplication">
+      <div id="parts">
+        <br>
+        <label for="applications">Choose an Application: <br> </label>
+        <select name="applications" id="applications" v-model="applicationName" @change="emitMsg">
+          <option v-for="apps in applications" :key="apps" :value="apps">
+            {{apps}}
+          </option>
+        </select>
+        <br>
+        <br>
+      </div>
+      <div>
+        <DataPresenter :application="applicationName" />
+      </div>
+    </div>
+    <h1 v-else>
+       Loading Applications. Please Wait.
+    </h1>
   </div>
 </template>
 
@@ -48,6 +54,7 @@
       },
       emitMsg(){
         EventBus.$emit('application-change',this.applicationName);
+
       }
     },
 
@@ -59,8 +66,24 @@
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  label {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-left: 20px;
+  }
+  select {
+    font-size: 20px;
+    padding-left: 20px;
+  }
+  #parts {
+    border: 2px solid black;
+    margin-top: 40px;
   }
 </style>

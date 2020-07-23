@@ -1,7 +1,8 @@
 <template>
     <div>
         <div id="timeline" v-if="hasLoaded">
-            <h2> {{device}} </h2>
+            <br>
+            <span id="Deviename"> {{device}} </span>
             <span v-for="value in values" :key="value">
                 <input checked type="checkbox"  :value="value" v-model="showTimeline" >
                 <label :id="value" :for="value">{{value}}</label>
@@ -134,6 +135,13 @@
 <style scoped>
     #timeline {
         border: 4px solid black;
+    }
+
+    #Deviename {
+        font-size: 40px;
+        font-weight: bold;
+        padding-left: 20px;
+        padding-top: 40px;
     }
 
     input {

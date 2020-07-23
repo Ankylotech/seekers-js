@@ -1,6 +1,6 @@
 <template>
-    <div ref="scope">
-        <h3> {{application}}</h3>
+    <div>
+        <h2> {{application}}</h2>
         <div id="panels" v-if="hasLoadedApp && hasLoadedConf">
             <DevicePanel id="panel" v-for="device in deviceData" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
         </div>
@@ -71,14 +71,20 @@
 
 <style scoped>
     #panels {
-
         display: grid;
         grid-template-columns: repeat(4, auto [col-start]);
         grid-gap: 5%;
         margin-left: 10%;
         margin-right: 10%;
+        margin-bottom: 10px;
+        padding: 10px 10px 50px 10px;
+        border: 2px solid black;
     }
     #panel {
         border: 4px solid black;
+        text-align: center;
+    }
+    h2 {
+        padding-left: 20px;
     }
 </style>

@@ -1,7 +1,6 @@
 <template>
     <div>
         <div id="dynamic-component-demo" class="demo">
-            <p>
                 <button
                         v-for="tab in tabs"
                         v-bind:key="tab"
@@ -10,8 +9,7 @@
                 >
                     {{ tab }}
                 </button>
-            </p>
-            <div>
+            <div id="parts">
                 <keep-alive>
                     <Dashboard v-if="currentTabComponent==='Dashboard'" :application="application"/>
                     <Timeline v-else :application="application"/>
@@ -50,14 +48,16 @@
 
 <style scoped>
     .tab-button {
-        padding: 6px 10px;
+        padding: 6px 200px;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
-        border: 1px solid #ccc;
+        border: 1px solid darkslategray;
         cursor: pointer;
         background: #f0f0f0;
-        margin-bottom: -1px;
+        margin-bottom: -10px;
         margin-right: -1px;
+        font-size: 20px;
+        clip-path: polygon(0 0, 95% 0, 100% 100%, 0% 100%);
     }
     .tab-button:hover {
         background: #e0e0e0;
