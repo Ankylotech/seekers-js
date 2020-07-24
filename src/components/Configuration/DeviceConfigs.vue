@@ -9,18 +9,16 @@
                     </v-card-text>
                 </v-card>
             </v-col>
-            <v-col>
-                <v-btn class="my-10">
-                    <v-icon>mdi-plus</v-icon>
-                </v-btn>
-            </v-col>
+            <Add-config-btn/>
         </v-row>
     </v-container>
 </template>
 
 <script>
+    import AddConfigBtn from "./AddConfigBtn";
     export default {
         name: "DeviceConfigs",
+        components: {AddConfigBtn},
         props: {
             config: {}
         },
@@ -34,10 +32,7 @@
             this.devices = this.config.devices;
             console.log(this.config["device-config"]);
             this.deviceConfigs = this.config["device-config"];
-        }
+        },
     }
 </script>
 
-<style scoped>
-
-</style>
