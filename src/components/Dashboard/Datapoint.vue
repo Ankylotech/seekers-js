@@ -1,8 +1,8 @@
 <template>
     <div>
-        <v-list-item class="red--text" color="red" id="red" v-if="isRed">{{name}} : {{value}}! </v-list-item>
-        <v-list-item color="#ffa500" id="orange" v-else-if="isOrange">{{name}} : {{value}}.</v-list-item>
-        <v-list-item v-else>{{name}} : {{value}}</v-list-item>
+        <v-card-text class="red--text" color="red" id="red" v-if="isRed">{{name}} : {{value}} </v-card-text>
+        <v-card-text class="orange--text" color="#ffa500" id="orange" v-else-if="isOrange">{{name}} : {{value}}</v-card-text>
+        <v-card-text v-else>{{name}} : {{value}}</v-card-text>
     </div>
 </template>
 

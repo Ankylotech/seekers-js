@@ -2,6 +2,7 @@
   <v-app id="app" >
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <div v-if="hasApplication">
 
       <v-app-bar app
@@ -51,9 +52,10 @@
       </v-main>
 
     </div>
-    <h1 v-else>
-       Loading Applications. Please Wait.
-    </h1>
+    <v-card v-else>
+      <h2> Loading Application. Please Wait. </h2>
+      <v-progress-linear indeterminate></v-progress-linear>
+    </v-card>
 
     <v-navigation-drawer
             v-model="drawer"

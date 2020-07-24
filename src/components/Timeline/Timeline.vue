@@ -3,9 +3,10 @@
         <div v-if="hasLoadedApp" id="grid" class="pa-4">
             <DeviceTimeline v-for="device in devices" :key="device" :colors="colors" :application="ID" :device="device"></DeviceTimeline>
         </div>
-        <div v-else>
-            <h4> Loading Devices, please Wait</h4>
-        </div>
+        <v-card v-else>
+            <h2> Loading Device Data. Please Wait. </h2>
+            <v-progress-linear indeterminate></v-progress-linear>
+        </v-card>
     </v-card>
 </template>
 
@@ -50,7 +51,5 @@
 </script>
 
 <style scoped>
-    h2 {
-        padding-left: 20px;
-    }
+
 </style>

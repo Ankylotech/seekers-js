@@ -9,7 +9,10 @@
                 </v-col>
             </v-row>
         </v-container>
-        <h2 v-else>Loading Devices. Please Wait.</h2>
+        <v-card v-else>
+            <h2> Loading Devices. Please Wait. </h2>
+            <v-progress-linear indeterminate></v-progress-linear>
+        </v-card>
     </v-card>
 </template>
 
@@ -68,10 +71,6 @@
                         this.hasLoadedConf = true;
                     })
                 });
-            },
-            randomString(row){
-                console.log(row);
-                return Math.random().toString(36).substring(7);
             }
         }
     }

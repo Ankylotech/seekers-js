@@ -5,12 +5,17 @@
             <v-row v-if="values.length > 0" justify="space-around">
                 <v-checkbox v-for="value in values" :key="value" :class="color(value) + '--text'"  :color="color(value)" :label="value" :value="value" v-model="showTimeline" ></v-checkbox>
             </v-row>
-            <v-card-text v-else> Loading Device Data. Please Wait</v-card-text>
+            <v-card v-else>
+                <h2> Loading Device Data. Please Wait. </h2>
+                <v-progress-linear indeterminate></v-progress-linear>
+            </v-card>
             <svg  :id="device">
             </svg>
         </v-card>
-        <h4 v-else> Loading Device Timeline. Please Wait</h4>
-        <v-divider/>
+        <v-card v-else>
+            <h2> Loading Device Timeline. Please Wait. </h2>
+            <v-progress-linear indeterminate></v-progress-linear>
+        </v-card>
     </div>
 </template>
 
@@ -125,7 +130,6 @@
         },
         mounted() {
             this.getData();
-            this.color();
         }
     };
 </script>
