@@ -14,18 +14,25 @@
                  src="/src/assets/qaw-stage-home.png"
                   fade-img-on-scroll>
 
-        <v-card color="#28537D">
-          <slot>
-          <v-btn @click="drawer = true"><v-icon>mdi-format-list-bulleted-square</v-icon> select Application </v-btn>
-          </slot>
-        </v-card>
-        <v-row>
+          <v-card>
+            <slot>
+            <v-btn @click="drawer = true"><v-icon>mdi-format-list-bulleted-square</v-icon> select Application </v-btn>
+            </slot>
+          </v-card>
+          <v-spacer/>
 
-        </v-row>
+
         <v-spacer/>
         <v-toolbar-title> {{applicationName}}</v-toolbar-title>
         <v-spacer/>
         <v-spacer/><v-spacer/>
+
+        <v-card>
+          <slot>
+            <v-btn v-if="!$auth.isAuthenticated" @click="login">sign-in <v-icon>mdi-account-circle</v-icon> </v-btn>
+            <v-btn v-else @click="logout">logout <v-icon>mdi-account-circle</v-icon> </v-btn>
+          </slot>
+        </v-card>
 
         <template v-slot:img="{ props }">
           <v-img
@@ -121,6 +128,15 @@
       }
     },
     methods: {
+      login() {
+        this.$auth.loginWithRedirect();
+      },
+      // Log the user out
+      logout() {
+        this.$auth.logout({
+          returnTo: window.location.origin
+        });
+      },
       fetchApplicationsList() {
         fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/').then((response) => {
           response.json().then((apps) => {
