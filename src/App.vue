@@ -1,5 +1,6 @@
 <template>
   <v-app id="app" >
+    <div v-if="loggedIn">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <div v-if="hasApplication">
@@ -14,11 +15,11 @@
                  src="/src/assets/qaw-stage-home.png"
                   fade-img-on-scroll>
 
-          <v-card>
-            <slot>
+
+
             <v-btn @click="drawer = true"><v-icon>mdi-format-list-bulleted-square</v-icon> select Application </v-btn>
-            </slot>
-          </v-card>
+
+
           <v-spacer/>
 
 
@@ -27,11 +28,6 @@
         <v-spacer/>
         <v-spacer/><v-spacer/>
 
-        <v-card>
-          <slot>
-            <GoogleLogin :params="params">Login</GoogleLogin>
-          </slot>
-        </v-card>
 
         <template v-slot:img="{ props }">
           <v-img
@@ -91,7 +87,15 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
+    </div>
+    <div v-else>
 
+      <v-card>
+        <slot>
+          <GoogleLogin :params="params" :onSuccess="onSuccess" :onFailure="onFailure">Login</GoogleLogin>
+        </slot>
+      </v-card>
+    </div>
   </v-app>
 </template>
 
@@ -115,6 +119,7 @@
         applicationName: String,
         applicationID: String,
         hasApplication : false,
+        loggedIn: false,
         tabs: ['Dashboard','Timeline'],
         currentTab: 'Dashboard',
         drawer: false,
@@ -132,15 +137,6 @@
       }
     },
     methods: {
-      login() {
-        this.$auth.loginWithRedirect();
-      },
-      // Log the user out
-      logout() {
-        this.$auth.logout({
-          returnTo: window.location.origin
-        });
-      },
       fetchApplicationsList() {
         fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/').then((response) => {
           response.json().then((apps) => {
@@ -163,7 +159,18 @@
           }
         }
         EventBus.$emit('application-change',this.applicationID);
+      },
+        onSuccess(googleUser) {
+          console.log(googleUser);
+          this.loggedIn = true;
+          // This only gets the user information: id, name, imageUrl and email
+          console.log(googleUser.getBasicProfile());
+        },
+      onFailure(){
+        console.log("couldn't log in correctly");
+        this.loggedIn = true;
       }
+
     },
 
   };
