@@ -29,8 +29,7 @@
 
         <v-card>
           <slot>
-            <v-btn v-if="!$auth.isAuthenticated" @click="login">sign-in <v-icon>mdi-account-circle</v-icon> </v-btn>
-            <v-btn v-else @click="logout">logout <v-icon>mdi-account-circle</v-icon> </v-btn>
+            <GoogleLogin :params="params">Login</GoogleLogin>
           </slot>
         </v-card>
 
@@ -100,12 +99,14 @@
 
   import Dashboard from "./components/Dashboard/Dashboard.vue"
   import Timeline from "./components/Timeline/Timeline.vue"
+  import GoogleLogin from 'vue-google-login';
   import {EventBus} from "./components/event-bus.js"
   export default {
     name: "app",
     components: {
       Dashboard,
-      Timeline
+      Timeline,
+      GoogleLogin
     },
     data: function() {
       return {
@@ -116,7 +117,10 @@
         hasApplication : false,
         tabs: ['Dashboard','Timeline'],
         currentTab: 'Dashboard',
-        drawer: false
+        drawer: false,
+        params: {
+          client_id: "463927479684-s78s8o2bqfh6umt30kn9k4vrvetfuq83.apps.googleusercontent.com"
+        },
       };
     },
     mounted() {
