@@ -67,11 +67,9 @@
     import Timeline from "./components/Timeline/Timeline.vue"
 
     export default {
-        name: 'bODY',
+        name: 'Body',
         components: {Configuration, Dashboard, Timeline,GoogleLogin},
         props: {
-            Configuration: {},
-            Dashboard: {},
             applicationID: {},
             applicationName: {},
             authenticated: {},

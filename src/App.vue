@@ -3,10 +3,10 @@
     <div v-if="loggedIn">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
-      <Body :configuration="Configuration" :dashboard="Dashboard" :applicationID="applicationID"
-            :applicationName="applicationName" :authenticated="authenticated" :currentTab="currentTab"
-            :currentTabComponent="currentTabComponent" :drawer="drawer" :hasApplication="hasApplication"
-            :onFailure="onFailure" :onSuccess="onSuccess" :params="params" :tabs="tabs"/>
+      <Body  :applicationID="applicationID"
+            :applicationName="applicationName" :authenticated="authenticated"
+             :drawer="drawer" :hasApplication="hasApplication"
+            :onFailure="onFailure" :onSuccess="onSuccess" :params="params"/>
       <Drawer :applications="applications" :drawer="drawer"/>
     </div>
     <div v-else>
@@ -34,7 +34,6 @@
         applicationID: String,
         hasApplication : false,
         loggedIn: false,
-        drawer: false,
         authenticated: false,
         params: {
           client_id: "463927479684-s78s8o2bqfh6umt30kn9k4vrvetfuq83.apps.googleusercontent.com"
@@ -45,6 +44,9 @@
       this.fetchApplicationsList()
     },
     methods: {
+      drawer() {
+        return Drawer.drawer;
+      },
       fetchApplicationsList() {
         fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/').then((response) => {
           response.json().then((apps) => {

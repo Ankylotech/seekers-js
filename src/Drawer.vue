@@ -36,7 +36,11 @@
         name: 'Drawer',
         props: {
             applications: {},
-            drawer: {}
+        },
+        data: function(){
+            return {
+                drawer: false
+            }
         },
         methods: {
             emitMsg(application){

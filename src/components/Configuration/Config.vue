@@ -1,7 +1,11 @@
 
 <template>
-    <v-card>
+    <v-card v-if="hasLoadedConf">
 
+    </v-card>
+    <v-card v-else>
+        <h2> Loading Configurations. Please Wait. </h2>
+        <v-progress-linear indeterminate></v-progress-linear>
     </v-card>
 </template>
 
