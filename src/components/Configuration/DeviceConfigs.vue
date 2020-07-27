@@ -9,7 +9,7 @@
                     </v-card-text>
                 </v-card>
             </v-col>
-            <Add-config-btn/>
+            <Add-config-btn :token="token" :devices="allDevices" :app-i-d="appID" :app-name="appName"/>
         </v-row>
     </v-container>
 </template>
@@ -20,7 +20,11 @@
         name: "DeviceConfigs",
         components: {AddConfigBtn},
         props: {
-            config: {}
+            config: {},
+            allDevices: Array,
+            appName: String,
+            appID: String,
+            token: String
         },
         data: function() {
             return {
@@ -30,7 +34,6 @@
         },
         mounted() {
             this.devices = this.config.devices;
-            console.log(this.config["device-config"]);
             this.deviceConfigs = this.config["device-config"];
         },
     }

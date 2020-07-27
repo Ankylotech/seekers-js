@@ -4,7 +4,7 @@
         <v-container  v-for="(data,index) in configs"  :key="index">
             <v-card>
                 <h2 class="pa-4"> {{data.config}} Configurations: </h2>
-                <Deviceconfigs :config="data"></Deviceconfigs>
+                <Deviceconfigs :token="token" :config="data" :all-devices="allDevices" :app-name="application" :app-i-d="ID"></Deviceconfigs>
             </v-card>
         </v-container>
         <v-card v-if="configs.length === 0">
@@ -26,7 +26,8 @@
         name: "Config",
         props: {
             application: String,
-            ID: String
+            ID: String,
+            token: String
         },
         components: {
             Deviceconfigs
@@ -36,6 +37,7 @@
                 configs:[],
                 hasConfig: [],
                 hasLoadedConf:false,
+                allDevices: [],
             }
         },
         mounted() {
@@ -53,6 +55,12 @@
                             if(configData[key] != null) this.configs.push(configData[key]);
                         }
                         this.hasLoadedConf = true;
+
+                    })
+                });
+                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices').then((response) => {
+                    response.json().then((configData) => {
+                        this.allDevices = configData;
 
                     })
                 });

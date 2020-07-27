@@ -1,6 +1,5 @@
 <template>
   <v-app id="app" >
-    <div v-if="loggedIn">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
       <div v-if="hasApplication">
@@ -53,7 +52,7 @@
           <keep-alive>
             <Dashboard v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
             <Configuration v-else-if="currentTabComponent==='Configuration'" :application="applicationName"
-                           :ID="applicationID"></Configuration>
+                           :ID="applicationID" :token="token"></Configuration>
             <Timeline v-else :application="applicationName" :ID="applicationID"/>
           </keep-alive>
         </v-main>
@@ -92,15 +91,11 @@
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
-    </div>
-    <div v-else>
-      <Login :on-failure="onFailure" :on-success="onSuccess" :params="params"/>
-    </div>
+
   </v-app>
 </template>
 
 <script >
-  import Login from "./Login";
   import GoogleLogin from 'vue-google-login';
   import Dashboard from "./components/Dashboard/Dashboard.vue";
   import Timeline from "./components/Timeline/Timeline.vue";
@@ -109,7 +104,6 @@
   export default {
     name: "app",
     components: {
-      Login,
       GoogleLogin,
       Dashboard,
       Timeline,
@@ -122,7 +116,6 @@
         applicationName: String,
         applicationID: String,
         hasApplication : false,
-        loggedIn: false,
         authenticated: false,
         drawer: false,
         params: {
@@ -156,23 +149,17 @@
         });
       },
         onSuccess(googleUser) {
-          console.log(googleUser);
-          this.loggedIn = true;
           let mail = googleUser.getBasicProfile().getEmail();
           const emailSplit = mail.split('@');
           const userEmailDomain = emailSplit[emailSplit.length - 1].toLowerCase();
-          let prov = "qaware.de"
-          console.log(userEmailDomain);
+          let prov = "qaware.de";
           this.authenticated = userEmailDomain === prov;
           if(this.authenticated){
             this.token = googleUser.getAuthResponse().id_token;
           }
-          // This only gets the user information: id, name, imageUrl and email
-          console.log(googleUser.getBasicProfile());
         },
       onFailure(){
         console.log("couldn't log in correctly");
-        this.loggedIn = true;
         this.authenticated=false;
       },
       emitMsg(application) {
