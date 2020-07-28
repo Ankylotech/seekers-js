@@ -127,13 +127,10 @@
         params: {
           client_id: "463927479684-s78s8o2bqfh6umt30kn9k4vrvetfuq83.apps.googleusercontent.com"
         },
-        token: String,
+        token: "",
         currentTab: 'Dashboard',
         tabs: ['Dashboard','Timeline']
       };
-    },
-    mounted() {
-      this.fetchApplicationsList()
     },
     computed: {
       currentTabComponent() {
@@ -165,17 +162,16 @@
           })
         });
       },
-        onSuccess(googleUser) {
-          this.loggedIn = true;
-          let mail = googleUser.getBasicProfile().getEmail();
-          const emailSplit = mail.split('@');
-          const userEmailDomain = emailSplit[emailSplit.length - 1].toLowerCase();
-          let prov = "qaware.de";
-          this.authenticated = userEmailDomain === prov;
-          if(this.authenticated){
-            this.token = googleUser.getAuthResponse().id_token;
-          }
-        },
+      onSuccess(googleUser) {
+        this.fetchApplicationsList();
+        this.loggedIn = true;
+        let mail = googleUser.getBasicProfile().getEmail();
+        const emailSplit = mail.split('@');
+        const userEmailDomain = emailSplit[emailSplit.length - 1].toLowerCase();
+        let prov = "qaware.de";
+        this.authenticated = userEmailDomain === prov;
+        this.token = googleUser.getAuthResponse().id_token;
+      },
       onFailure(){
         console.log("couldn't log in correctly");
         this.authenticated=false;
