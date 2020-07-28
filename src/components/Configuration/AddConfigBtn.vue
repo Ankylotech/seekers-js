@@ -2,7 +2,7 @@
     <v-container>
         <v-col>
             <v-btn class="my-14" v-on:click="openAddConfigDialog">
-                <v-icon>mdi-plus</v-icon>
+                <v-icon>mdi-plus</v-icon> Add new Configuration
             </v-btn>
         </v-col>
         <v-dialog v-model="dialog">
@@ -47,6 +47,8 @@
     </v-container>
 </template>
 <script>
+    import {EventBus} from "../event-bus";
+
     export default {
         name: 'Add-config-btn',
         props: {
@@ -71,18 +73,18 @@
                 this.dialog=false;
                 if(this.device !== '' && this.configData !== {}){
                     let json = {};
-                    json['config'] = this.config;
-                    json['deviceName'] = this.device;
+                    json.config = this.config;
+                    json.deviceName = this.device;
                     if(this.config === 'co2'){
                         delete this.configData['temp-thresholds'];
-                        json['device-configs'] = this.configData;
+                        json['device-config'] = this.configData;
                     }else{
-                        json['device-configs']['upper-threshold'] = this.configData['temp-thresholds'][1]
-                        json['device-configs']['lower-threshold'] = this.configData['temp-thresholds'][0]
+                        json['device-config'] = {};
+                        json['device-config']['upper-warning'] = this.configData['temp-thresholds'][1];
+                        json['device-config']['lower-warning'] = this.configData['temp-thresholds'][0];
                     }
-                    json['applicationName'] = this.appName;
-                    json['applicationID'] = this.appID;
-                    console.log(this.token)
+                    json.applicationName = this.appName;
+                    json.applicationID = this.appID;
 
                     const myHeaders = new Headers({
                         'Content-Type': 'application/json',
@@ -97,14 +99,14 @@
                         headers: myHeaders,
                         body: JSON.stringify(json)
                     });
-                    fetch(myRequest)
-                        .then(response => console.log(response.json()))
-                        .then(data => {
-                            console.log('Success:', data);
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
+                    let error = false;
+                    await fetch(myRequest).catch((err) => {
+                        console.error(err);
+                        error = true;
+                    })
+                    if(!error){
+                        EventBus.$emit('addConfig',json)
+                    }
                 }else {
                     console.log('incomplete Data')
                 }

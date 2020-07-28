@@ -1,10 +1,11 @@
 
 <template>
     <v-card v-if="hasLoadedConf">
+        <AddConfigBtn class="pa-0" :token="token" :devices="allDevices" :app-i-d="ID" :app-name="application"/>
         <v-container  v-for="(data,index) in configs"  :key="index">
             <v-card>
                 <h2 class="pa-4"> {{data.config}} Configurations: </h2>
-                <Deviceconfigs :token="token" :config="data" :all-devices="allDevices" :app-name="application" :app-i-d="ID"></Deviceconfigs>
+                <Deviceconfigs :config="data" ></Deviceconfigs>
             </v-card>
         </v-container>
         <v-card v-if="configs.length === 0">
@@ -20,6 +21,7 @@
 <script>
     import Deviceconfigs from "./DeviceConfigs.vue"
     import {EventBus} from "../event-bus";
+    import AddConfigBtn from "./AddConfigBtn.vue"
 
     export default {
 
@@ -30,7 +32,8 @@
             token: String
         },
         components: {
-            Deviceconfigs
+            Deviceconfigs,
+            AddConfigBtn
         },
         data: function() {
             return{
@@ -43,6 +46,7 @@
         mounted() {
             this.fetchData();
             EventBus.$on('application-change', this.fetchData);
+            EventBus.$on('addConfig',this.addConfig)
         },
         methods: {
             async fetchData(application = this.ID){
@@ -51,7 +55,6 @@
                     response.json().then((configData) => {
                         this.configs = [];
                         for(let key in configData) {
-
                             if(configData[key] != null) this.configs.push(configData[key]);
                         }
                         this.hasLoadedConf = true;
@@ -64,6 +67,14 @@
 
                     })
                 });
+            },
+            addConfig(json){
+                for(let i = 0; i < this.configs.length; i++) {
+                    if (json.config === this.configs[i].config) {
+                        this.configs[i]['device-config'][json.deviceName] = json['device-config'];
+                        if(!this.configs[i]['devices'].includes(json.deviceName)) this.configs[i]['devices'].push(json.deviceName);
+                    }
+                }
             }
         }
     }

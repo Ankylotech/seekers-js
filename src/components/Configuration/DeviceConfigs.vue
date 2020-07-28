@@ -9,22 +9,16 @@
                     </v-card-text>
                 </v-card>
             </v-col>
-            <Add-config-btn :token="token" :devices="allDevices" :app-i-d="appID" :app-name="appName"/>
+
         </v-row>
     </v-container>
 </template>
 
 <script>
-    import AddConfigBtn from "./AddConfigBtn";
     export default {
         name: "DeviceConfigs",
-        components: {AddConfigBtn},
         props: {
             config: {},
-            allDevices: Array,
-            appName: String,
-            appID: String,
-            token: String
         },
         data: function() {
             return {

@@ -40,6 +40,7 @@
         mounted() {
             this.fetchData();
             EventBus.$on('application-change', this.fetchData);
+            EventBus.$on('addConfig',this.addConfig)
         },
         methods: {
             async fetchData(application = this.ID) {
@@ -71,6 +72,15 @@
                         this.hasLoadedConf = true;
                     })
                 });
+            },
+            addConfig(json){
+                for(let i = 0; i < this.configs.length; i++) {
+                    if (json.config === this.configs[i].config) {
+                        console.log('hes adding ' + JSON.stringify(json) + ' to ' + JSON.stringify(this.configs[i]))
+                        this.configs[i]['device-config'][json.deviceName] = json['device-config'];
+                        if(!(this.configs[i]['devices'].includes(json.deviceName))) this.configs[i]['devices'].push(json.deviceName);
+                    }
+                }
             }
         }
     }
