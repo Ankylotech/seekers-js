@@ -35,7 +35,8 @@
         props: {
             application: String,
             device: String,
-            colors: Object
+            colors: Object,
+            token: String
         },
         updated() {
             this.getChart();
@@ -100,7 +101,18 @@
                 })
             },
             getData: async function(application = this.application){
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices/' + this.device).then((response) => {
+                const myHeaders = new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin': '*'
+                });
+                const myRequest = new Request('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + application + '/devices/' + this.device, {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: myHeaders
+                });
+                fetch(myRequest).then((response) => {
                     response.json().then((applicationData) => {
                         for(let i = 0; i < applicationData.length; i++){
                             let datapoint = applicationData[i];

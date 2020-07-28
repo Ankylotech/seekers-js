@@ -15,7 +15,8 @@
         name: "DevicePanel",
         props: {
             rawData: Object,
-            config: Array
+            config: Array,
+            token: String
         },
         data: function() {
             return {

@@ -92,7 +92,7 @@
                         'Access-Control-Allow-Origin': '*'
                     });
 
-                    const myRequest = new Request('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/upload-config', {
+                    const myRequest = new Request('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + this.appID + '/config', {
                         method: 'POST',
                         withCredentials: true,
                         credentials: 'include',

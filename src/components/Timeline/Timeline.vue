@@ -1,7 +1,7 @@
 <template>
     <v-card class="pa-4">
         <div v-if="hasLoadedApp" id="grid" class="pa-4">
-            <DeviceTimeline v-for="device in devices" :key="device" :colors="colors" :application="ID" :device="device"></DeviceTimeline>
+            <DeviceTimeline v-for="device in devices" :token="token" :key="device" :colors="colors" :application="ID" :device="device"></DeviceTimeline>
         </div>
         <v-card v-else>
             <h2> Loading Device Data. Please Wait. </h2>
@@ -20,7 +20,8 @@
         },
         props: {
             application: String,
-            ID: String
+            ID: String,
+            token: String
         },
         data: function() {
             return {
@@ -36,8 +37,19 @@
         },
         methods: {
             async fetchData(application = this.ID) {
+                const myHeaders = new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin': '*'
+                });
+                const myRequest = new Request('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + application + '/devices', {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: myHeaders
+                });
                 this.hasLoadedApp = false;
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices').then((response) => {
+                fetch(myRequest).then((response) => {
                     response.json().then((applicationData) => {
                         this.hasLoadedApp = true;
                         const sortable = applicationData;

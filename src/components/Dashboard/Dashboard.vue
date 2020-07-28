@@ -4,7 +4,7 @@
             <v-row class="pa-4">
                 <v-col md="3" v-for="device in deviceData" :key="device.name" >
                     <v-spacer/>
-                    <DevicePanel class="pa-4" id="panel" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
+                    <DevicePanel :token="token" class="pa-4" id="panel" :key="device.name" :raw-data="device" :config="configs"></DevicePanel>
                     <v-spacer/>
                 </v-col>
             </v-row>
@@ -23,7 +23,8 @@
         name: "Dashboard",
         props: {
             application: String,
-            ID: String
+            ID: String,
+            token: String
         },
         components: {
             DevicePanel
@@ -46,7 +47,18 @@
             async fetchData(application = this.ID) {
                 this.hasLoadedConf = false;
                 this.hasLoadedApp = false;
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application).then((response) => {
+                const myHeaders = new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin': '*'
+                });
+                const myRequest = {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: myHeaders
+                };
+                fetch('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + application,myRequest).then((response) => {
                     response.json().then((applicationData) => {
                         this.hasLoadedApp = true;
                         this.applicationID = applicationData.applicationID;
@@ -66,7 +78,7 @@
                         this.deviceData = data;
                     })
                 });
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/config').then((response) => {
+                fetch('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + application + '/config',myRequest).then((response) => {
                     response.json().then((configData) => {
                         this.configs = configData;
                         this.hasLoadedConf = true;

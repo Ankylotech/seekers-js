@@ -51,7 +51,18 @@
         methods: {
             async fetchData(application = this.ID){
                 this.hasLoadedConf = false;
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/config').then((response) => {
+                const myHeaders = new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin': '*'
+                });
+                const myRequest = {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: myHeaders
+                };
+                fetch('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + application + '/config',myRequest).then((response) => {
                     response.json().then((configData) => {
                         this.configs = [];
                         for(let key in configData) {
@@ -61,7 +72,7 @@
 
                     })
                 });
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices').then((response) => {
+                fetch('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + application + '/devices',myRequest).then((response) => {
                     response.json().then((configData) => {
                         this.allDevices = configData;
 

@@ -2,6 +2,8 @@
   <v-app id="app" >
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+    <v-container v-if="loggedIn">
       <div v-if="hasApplication">
 
         <v-app-bar app
@@ -13,7 +15,6 @@
                    shrink-on-scroll
                    src="./src/assets/qaw-stage-home.png"
                    fade-img-on-scroll>
-
 
           <v-btn @click="drawer = true">
             <v-icon>mdi-format-list-bulleted-square</v-icon>
@@ -50,10 +51,10 @@
 
         <v-main>
           <keep-alive>
-            <Dashboard v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
+            <Dashboard :token="token" v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
             <Configuration v-else-if="currentTabComponent==='Configuration'" :application="applicationName"
                            :ID="applicationID" :token="token"></Configuration>
-            <Timeline v-else :application="applicationName" :ID="applicationID"/>
+            <Timeline v-else :token="token" :application="applicationName" :ID="applicationID"/>
           </keep-alive>
         </v-main>
 
@@ -91,7 +92,8 @@
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
-
+    </v-container>
+    <Login v-else :on-failure="onFailure" :on-success="onSuccess" :params="params"></Login>
   </v-app>
 </template>
 
@@ -101,13 +103,16 @@
   import Timeline from "./components/Timeline/Timeline.vue";
   import Configuration from "./components/Configuration/Config.vue"
   import {EventBus} from "./components/event-bus";
+  import Login from "./Login.vue";
+
   export default {
     name: "app",
     components: {
       GoogleLogin,
       Dashboard,
       Timeline,
-      Configuration
+      Configuration,
+      Login
     },
     data: function() {
       return {
@@ -117,6 +122,7 @@
         applicationID: String,
         hasApplication : false,
         authenticated: false,
+        loggedIn: false,
         drawer: false,
         params: {
           client_id: "463927479684-s78s8o2bqfh6umt30kn9k4vrvetfuq83.apps.googleusercontent.com"
@@ -136,7 +142,18 @@
     },
     methods: {
       fetchApplicationsList() {
-        fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/').then((response) => {
+        const myHeaders = new Headers({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.token,
+          'Access-Control-Allow-Origin': '*'
+        });
+        const myRequest = new Request('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/', {
+          method: 'GET',
+          withCredentials: true,
+          credentials: 'include',
+          headers: myHeaders
+        });
+        fetch(myRequest).then((response) => {
           response.json().then((apps) => {
             for(let i = 0;i < apps.length; i++){
               this.applications.push(apps[i][1]);
@@ -149,6 +166,7 @@
         });
       },
         onSuccess(googleUser) {
+          this.loggedIn = true;
           let mail = googleUser.getBasicProfile().getEmail();
           const emailSplit = mail.split('@');
           const userEmailDomain = emailSplit[emailSplit.length - 1].toLowerCase();
