@@ -47,18 +47,7 @@
             async fetchData(application = this.ID) {
                 this.hasLoadedConf = false;
                 this.hasLoadedApp = false;
-                const myHeaders = new Headers({
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + this.token,
-                    'Access-Control-Allow-Origin': '*'
-                });
-                const myRequest = {
-                    method: 'GET',
-                    withCredentials: true,
-                    credentials: 'include',
-                    headers: myHeaders
-                };
-                fetch('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + application,myRequest).then((response) => {
+                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application).then((response) => {
                     response.json().then((applicationData) => {
                         this.hasLoadedApp = true;
                         this.applicationID = applicationData.applicationID;
@@ -78,7 +67,7 @@
                         this.deviceData = data;
                     })
                 });
-                fetch('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + application + '/config',myRequest).then((response) => {
+                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/config').then((response) => {
                     response.json().then((configData) => {
                         this.configs = configData;
                         this.hasLoadedConf = true;

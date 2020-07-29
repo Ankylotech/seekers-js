@@ -139,18 +139,7 @@
     },
     methods: {
       fetchApplicationsList() {
-        const myHeaders = new Headers({
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + this.token,
-          'Access-Control-Allow-Origin': '*'
-        });
-        const myRequest = new Request('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/', {
-          method: 'GET',
-          withCredentials: true,
-          credentials: 'include',
-          headers: myHeaders
-        });
-        fetch(myRequest).then((response) => {
+        fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/').then((response) => {
           response.json().then((apps) => {
             for(let i = 0;i < apps.length; i++){
               this.applications.push(apps[i][1]);

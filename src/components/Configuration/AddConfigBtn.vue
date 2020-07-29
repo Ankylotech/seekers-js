@@ -88,11 +88,10 @@
 
                     const myHeaders = new Headers({
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + this.token,
-                        'Access-Control-Allow-Origin': '*'
+                        'Authorization': 'Bearer ' + this.token
                     });
 
-                    const myRequest = new Request('https://function-endpoint-5wkxzyv3sa-ew.a.run.app/applications/' + this.appID + '/config', {
+                    const myRequest = new Request('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + this.appID + '/config', {
                         method: 'POST',
                         withCredentials: true,
                         credentials: 'include',
