@@ -64,7 +64,7 @@
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices').then((response) => {
                     response.json().then((configData) => {
                         this.allDevices = configData;
-
+                        this.allDevices.sort();
                     })
                 });
             },

@@ -28,7 +28,21 @@
         },
         mounted() {
             this.devices = this.config.devices;
+            this.devices.sort();
             this.deviceConfigs = this.config["device-config"];
+            Object.keys(this.deviceConfigs).forEach((key) => {
+              const sortable = [];
+              for (let conf in this.deviceConfigs[key]) {
+                sortable.push([conf, this.deviceConfigs[key][conf]]);
+              }
+
+              sortable.sort();
+              let data = {};
+              sortable.forEach(function(item){
+                data[item[0]]=item[1]
+              });
+              this.deviceConfigs[key] = data;
+            })
         },
     }
 </script>
