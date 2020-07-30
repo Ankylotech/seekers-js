@@ -4,17 +4,27 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
 
     <v-container v-if="loggedIn">
-      <div v-if="hasApplication">
+      <v-container v-if="hasApplication" class="overflow-hidden" justify="space-around">
 
         <v-app-bar app
                    id="parts"
                    class="head"
                    absolute
+                   dense
                    color="#28537D"
                    dark
                    shrink-on-scroll
-                   src="./src/assets/qaw-stage-home.png"
+                   scroll-target="#scrolling"
+                   src="./src/assets/qaw-stage-home.jpg"
                    fade-img-on-scroll>
+
+
+          <template v-slot:img="{ props }">
+            <v-img
+                v-bind="props"
+                gradient="to top right, rgba(40,80,125,.3), rgba(90,130,175,.5)"
+            ></v-img>
+          </template>
 
           <v-btn @click="drawer = true">
             <v-icon>mdi-format-list-bulleted-square</v-icon>
@@ -25,44 +35,30 @@
           <v-toolbar-title> {{applicationName}}</v-toolbar-title>
           <v-spacer/>
           <v-spacer/>
-          <v-card v-if="!authenticated" class="px-4">
-            <GoogleLogin :params="params" :onSuccess="onSuccess" :onFailure="onFailure">Login with QAware Account
-            </GoogleLogin>
-          </v-card>
-          <v-spacer v-else/>
-
-          <template v-slot:img="{ props }">
-            <v-img
-                    v-bind="props"
-            ></v-img>
-          </template>
+          <v-spacer/>
 
 
           <template v-slot:extension>
             <v-tabs align-with-title grow>
               <v-tab v-for="tab in tabs" :key="tab" v-on:click="currentTab = tab">{{tab}}</v-tab>
-              <v-tab v-if="authenticated" key="configuration" v-on:click="currentTab = 'Configuration'">
-                Configuration
-              </v-tab>
             </v-tabs>
           </template>
         </v-app-bar>
-
-
         <v-main>
-          <keep-alive>
-            <Dashboard :token="token" v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
-            <Configuration v-else-if="currentTabComponent==='Configuration'" :application="applicationName"
-                           :ID="applicationID" :token="token"></Configuration>
-            <Timeline v-else :token="token" :application="applicationName" :ID="applicationID"/>
-          </keep-alive>
+            <keep-alive>
+              <Dashboard :token="token" v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
+              <Configuration v-else-if="currentTabComponent==='Configuration'" :application="applicationName"
+                             :ID="applicationID" :token="token"></Configuration>
+              <Timeline v-else :token="token" :application="applicationName" :ID="applicationID"/>
+            </keep-alive>
         </v-main>
 
-      </div>
+      </v-container>
       <v-card v-else>
         <h2> Loading Application. Please Wait. </h2>
         <v-progress-linear indeterminate></v-progress-linear>
       </v-card>
+
       <v-navigation-drawer
               v-model="drawer"
               color="#28537D"
@@ -98,7 +94,6 @@
 </template>
 
 <script >
-  import GoogleLogin from 'vue-google-login';
   import Dashboard from "./components/Dashboard/Dashboard.vue";
   import Timeline from "./components/Timeline/Timeline.vue";
   import Configuration from "./components/Configuration/Config.vue"
@@ -108,7 +103,6 @@
   export default {
     name: "app",
     components: {
-      GoogleLogin,
       Dashboard,
       Timeline,
       Configuration,
@@ -129,7 +123,7 @@
         },
         token: "",
         currentTab: 'Dashboard',
-        tabs: ['Dashboard','Timeline']
+        tabs: ['Dashboard','Timeline','Configuration']
       };
     },
     computed: {
