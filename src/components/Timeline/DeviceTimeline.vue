@@ -50,12 +50,8 @@
                 const height = 120;
                 const width = 400;
                 svg.attr("viewBox", [0, 0, width, height]);
-                let yAxis = g => g
-                    .attr("transform", `translate(${margin.left},0)`)
-                    .call(d3.axisLeft(y).ticks(height/40))
-                let y = d3.scaleLinear()
-                    .domain([0, 100])
-                    .range([height - margin.bottom, margin.top])
+
+
 
                 let xAxis = g => g
                     .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -65,21 +61,41 @@
                     .range([margin.left, width - margin.right])
 
                 svg.append("g")
-                    .call(yAxis);
-
-                svg.append("g")
                     .call(xAxis);
                 Object.keys(this.data).forEach((key) => {
                     if(this.showTimeline.includes(key)) {
-                        let data = this.data[key];
-                        let min = d3.min(data, d => d.value);
-                        let max = d3.max(data, d => d.value);
+                        let data = [];
+                        let min = d3.min(this.data[key], d => d.value);
+                        let max = d3.max(this.data[key], d => d.value);
+                        let yAxis = g => g
+                            .attr("transform", `translate(${margin.left},0)`)
+                            .call(d3.axisLeft(y).ticks(height/40))
+                        let y;
 
-
-                        data.forEach((datapoint) => {
-                            if(min !== max) datapoint.value = (datapoint.value-min)*100/(max-min);
-                            else datapoint.value = 50;
-                        })
+                        if(this.showTimeline.length > 1) {
+                          this.data[key].forEach((datapoint) => {
+                            if (min !== max) data.push({
+                              value: (datapoint.value - min) * 100 / (max - min),
+                              date: datapoint.date
+                          });
+                            else data.push({
+                              value: 50,
+                              date: datapoint.date
+                            });
+                          })
+                          y = d3.scaleLinear()
+                              .domain([0, 100])
+                              .range([height - margin.bottom, margin.top])
+                        }else {
+                          this.data[key].forEach((datapoint) => {
+                            data.push(datapoint)
+                          })
+                          y = d3.scaleLinear()
+                              .domain([min,max])
+                              .range([height - margin.bottom, margin.top])
+                        }
+                        svg.append("g")
+                          .call(yAxis);
 
 
                         let line = d3.line()
