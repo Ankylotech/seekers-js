@@ -58,14 +58,7 @@
                     .domain([0, 100])
                     .range([height - margin.bottom, margin.top])
 
-                svg.append('rect')
-                  .style("fill", "none")
-                  .style("pointer-events", "all")
-                  .attr('width', width)
-                  .attr('height', height)
-                  .on('mouseover', mouseover)
-                  .on('mousemove', mousemove)
-                  .on('mouseout', mouseout);
+
 
                 let bisect = d3.bisector(function(d) { return d.date; }).left;
 
@@ -78,21 +71,26 @@
                 }
 
                 let unit = this.unit(this.showTimeline[0]);
-
+                let dateMax = this.dateBorders.max;
                 function mousemove() {
                   if(focusReq) {
                     // recover coordinate we need
                     let x0 = x.invert(d3.mouse(this)[0]);
                     let i = bisect(data, x0, 1);
                     let selectedData = data[i];
+                    let text = " y: " + selectedData.value + " " + unit
                     if(selectedData) {
                       focus
                           .attr("cx", x(selectedData.date.toString()))
                           .attr("cy", y(selectedData.value))
                       focusText
-                          .html("y: " + selectedData.value + " " + unit)
-                          .attr("x", x(selectedData.date) + 15)
-                          .attr("y", y(selectedData.value))
+                          .html(text)
+                          .attr("x", x(selectedData.date) + 4)
+                          .attr("y", y(selectedData.value) - 5)
+                      if(x(selectedData.date) > x(dateMax)/2){
+                        focusText.attr("x",x(selectedData.date) - text.length*7.5 )
+                            .attr("text-anchor", "right")
+                      }
                     }
                   }
                 }
@@ -187,6 +185,14 @@
                       }
                     }
                 })
+              svg.append('rect')
+                  .style("fill", "none")
+                  .style("pointer-events", "all")
+                  .attr('width', width)
+                  .attr('height', height)
+                  .on('mouseover', mouseover)
+                  .on('mousemove', mousemove)
+                  .on('mouseout', mouseout);
             },
             getData: async function(application = this.application){
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices/' + this.device).then((response) => {
