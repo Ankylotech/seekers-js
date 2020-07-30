@@ -1,7 +1,8 @@
 <template>
     <div>
         <v-card id="timeline" v-if="hasLoaded">
-            <v-card-text id="devicename" > {{device}} </v-card-text>
+            <v-card-title id="devicename" > {{device}} </v-card-title>
+            <v-divider light />
             <v-row v-if="values.length > 0" justify="space-around">
                 <v-checkbox v-for="value in values" :key="value" :class="color(value) + '--text'"  :color="color(value)" :label="value" :value="value" v-model="showTimeline" ></v-checkbox>
             </v-row>
@@ -9,6 +10,7 @@
                 <h2> Loading Device Data. Please Wait. </h2>
                 <v-progress-linear indeterminate></v-progress-linear>
             </v-card>
+            <v-divider light />
             <svg  :id="device">
             </svg>
         </v-card>
@@ -246,12 +248,6 @@
 </script>
 
 <style scoped>
-    #devicename {
-        font-size: 40px;
-        font-weight: bold;
-        padding-left: 20px;
-        padding-top: 40px;
-    }
 
     input {
         margin-left: 10px;
