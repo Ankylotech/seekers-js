@@ -50,6 +50,58 @@
                 const height = 120;
                 const width = 400;
                 svg.attr("viewBox", [0, 0, width, height]);
+                let focusText = d3.select(selector);
+                let focus = d3.select(selector);
+                let data = [];
+                let focusReq = this.showTimeline.length === 1;
+                let y = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([height - margin.bottom, margin.top])
+
+                svg.append('rect')
+                  .style("fill", "none")
+                  .style("pointer-events", "all")
+                  .attr('width', width)
+                  .attr('height', height)
+                  .on('mouseover', mouseover)
+                  .on('mousemove', mousemove)
+                  .on('mouseout', mouseout);
+
+                let bisect = d3.bisector(function(d) { return d.date; }).left;
+
+                // What happens when the mouse move -> show the annotations at the right positions.
+                function mouseover() {
+                  if(focusReq) {
+                    focus.style("opacity", 1)
+                    focusText.style("opacity", 1)
+                  }
+                }
+
+                let unit = this.unit(this.showTimeline[0]);
+
+                function mousemove() {
+                  if(focusReq) {
+                    // recover coordinate we need
+                    let x0 = x.invert(d3.mouse(this)[0]);
+                    let i = bisect(data, x0, 1);
+                    let selectedData = data[i];
+                    if(selectedData) {
+                      focus
+                          .attr("cx", x(selectedData.date.toString()))
+                          .attr("cy", y(selectedData.value))
+                      focusText
+                          .html("y: " + selectedData.value + " " + unit)
+                          .attr("x", x(selectedData.date) + 15)
+                          .attr("y", y(selectedData.value))
+                    }
+                  }
+                }
+                function mouseout() {
+                  if(focusReq) {
+                    focus.style("opacity", 0)
+                    focusText.style("opacity", 0)
+                  }
+                }
 
 
 
@@ -64,55 +116,75 @@
                     .call(xAxis);
                 Object.keys(this.data).forEach((key) => {
                     if(this.showTimeline.includes(key)) {
-                        let data = [];
-                        let min = d3.min(this.data[key], d => d.value);
-                        let max = d3.max(this.data[key], d => d.value);
-                        let yAxis = g => g
-                            .attr("transform", `translate(${margin.left},0)`)
-                            .call(d3.axisLeft(y).ticks(height/40))
-                        let y;
+                      data = [];
+                      let min = d3.min(this.data[key], d => d.value);
+                      let max = d3.max(this.data[key], d => d.value);
+                      let yAxis = g => g
+                          .attr("transform", `translate(${margin.left},0)`)
+                          .call(d3.axisLeft(y).ticks(height/40))
 
-                        if(this.showTimeline.length > 1) {
-                          this.data[key].forEach((datapoint) => {
-                            if (min !== max) data.push({
-                              value: (datapoint.value - min) * 100 / (max - min),
-                              date: datapoint.date
+                      svg.append("text")
+                          .attr("text-anchor", "end")
+                          .attr("y", -margin.left+20)
+                          .attr("x", -margin.top)
+                          .text("Y axis title")
+
+                      if(this.showTimeline.length > 1) {
+
+                        this.data[key].forEach((datapoint) => {
+                          if (min !== max) data.push({
+                            value: (datapoint.value - min) * 100 / (max - min),
+                            date: datapoint.date
                           });
-                            else data.push({
-                              value: 50,
-                              date: datapoint.date
-                            });
-                          })
-                          y = d3.scaleLinear()
-                              .domain([0, 100])
-                              .range([height - margin.bottom, margin.top])
-                        }else {
-                          this.data[key].forEach((datapoint) => {
-                            data.push(datapoint)
-                          })
-                          y = d3.scaleLinear()
-                              .domain([min,max])
-                              .range([height - margin.bottom, margin.top])
-                        }
-                        svg.append("g")
-                          .call(yAxis);
+                          else data.push({
+                            value: 50,
+                            date: datapoint.date
+                          });
+                        })
+                      }else {
+                        this.data[key].forEach((datapoint) => {
+                          data.push(datapoint)
+                        })
+                        y = d3.scaleLinear()
+                            .domain([min,max])
+                            .range([height - margin.bottom, margin.top])
+                      }
+                      svg.append("g")
+                        .call(yAxis);
 
 
-                        let line = d3.line()
-                            .defined(d => !isNaN(d.value))
-                            .x(d => x(d.date))
-                            .y(d => y(d.value))
+                      let line = d3.line()
+                          .defined(d => !isNaN(d.value))
+                          .x(d => x(d.date))
+                          .y(d => y(d.value))
 
 
-                        svg.append("path")
-                            .datum(data)
-                            .attr("fill", "none")
-                            .attr("stroke-width", 0.75)
-                            .attr("stroke-linejoin", "round")
-                            .attr("stroke-linecap", "round")
-                            .attr("d", line)
-                            .attr("stroke", this.color(key))
-                            .attr("id",key);
+                      svg.append("path")
+                          .datum(data)
+                          .attr("fill", "none")
+                          .attr("stroke-width", 0.75)
+                          .attr("stroke-linejoin", "round")
+                          .attr("stroke-linecap", "round")
+                          .attr("d", line)
+                          .attr("stroke", this.color(key))
+                          .attr("id",key);
+                      if(focusReq){
+                        focus = svg
+                            .append('g')
+                            .append('circle')
+                            .style("fill", "none")
+                            .attr("stroke", "black")
+                            .attr('r', 2)
+                            .style("opacity", 0)
+
+                        // Create the text that travels along the curve of chart
+                        focusText = svg
+                            .append('g')
+                            .append('text')
+                            .style("opacity", 0)
+                            .attr("text-anchor", "left")
+                            .attr("alignment-baseline", "middle")
+                      }
                     }
                 })
             },
@@ -130,7 +202,7 @@
                                     this.values.push(key);
                                 }
                                 if(!this.data[key]) this.data[key] = [];
-                                this.data[key].push(Object.assign({date: date, value: datapoint[key]},{y:'ppm'}));
+                                this.data[key].push(Object.assign({date: date, value: datapoint[key]},{y:this.unit(key)}));
                             });
                         }
                         this.getChart();
@@ -142,6 +214,22 @@
                 let color = this.colors[value];
                 if (!color) color = "#4682b4";
                 return color;
+            },
+            unit: function(value){
+              switch (value) {
+                case 'co2':
+                  return 'ppm';
+                case 'temperature':
+                  return '°C';
+                case 'light':
+                  return 'Lux';
+                case 'vdd':
+                  return 'V';
+                case 'humidity':
+                  return '%Rh';
+                default:
+                  return '';
+              }
             }
 
         },
