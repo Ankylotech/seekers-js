@@ -85,7 +85,7 @@
                           .attr("cy", y(selectedData.value))
                       focusText
                           .html(text)
-                          .attr("x", x(selectedData.date) + 4)
+                          .attr("x", x(selectedData.date) + 5)
                           .attr("y", y(selectedData.value) - 5)
                       if(x(selectedData.date) > x(dateMax)/2){
                         focusText.attr("x",x(selectedData.date) - text.length*7.5 )
