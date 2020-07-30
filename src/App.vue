@@ -15,14 +15,14 @@
                    dark
                    shrink-on-scroll
                    scroll-target="#scrolling"
-                   src="./src/assets/qaw-stage-home.jpg"
+                   src="https://www.qaware.de/fileadmin/user_upload/Stagemoods/qaw-stage-home.png"
                    fade-img-on-scroll>
 
 
           <template v-slot:img="{ props }">
             <v-img
                 v-bind="props"
-                gradient="to top right, rgba(40,80,125,.3), rgba(90,130,175,.5)"
+                gradient="to top, rgba(20,40,63,.4), rgba(90,130,175,.6)"
             ></v-img>
           </template>
 
