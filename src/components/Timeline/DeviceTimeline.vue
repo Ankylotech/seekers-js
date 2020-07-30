@@ -78,7 +78,7 @@
                     let x0 = x.invert(d3.mouse(this)[0]);
                     let i = bisect(data, x0, 1);
                     let selectedData = data[i];
-                    let text = " y: " + selectedData.value + " " + unit
+                    let text = selectedData.value + " " + unit
                     if(selectedData) {
                       focus
                           .attr("cx", x(selectedData.date.toString()))
@@ -88,7 +88,7 @@
                           .attr("x", x(selectedData.date) + 5)
                           .attr("y", y(selectedData.value) - 5)
                       if(x(selectedData.date) > x(dateMax)/2){
-                        focusText.attr("x",x(selectedData.date) - text.length*7.5 )
+                        focusText.attr("x",x(selectedData.date) - text.length*9 )
                             .attr("text-anchor", "right")
                       }
                     }
