@@ -25,14 +25,11 @@
                 <v-divider/>
                 <v-row>
                   <v-container v-if="config==='co2'">
-                    <v-slider v-model="configData['warn-threshold']" label="warn-threshold" thumb-label min="400" max="3000">
-                    </v-slider>
-                    <v-slider v-model="configData['error-threshold']" label="error-threshold" thumb-label :min="configData['warn-threshold']+1" max="3000">
-                    </v-slider>
+                    <v-slider v-model="configData['warn-threshold']" label="warn-threshold" thumb-label min="400" max="3000"/>
+                    <v-slider v-model="configData['error-threshold']" label="error-threshold" thumb-label :min="configData['warn-threshold']+1" max="3000"/>
                   </v-container>
                   <v-container v-else>
-                    <v-range-slider v-model="configData['temp-thresholds']" label="temperature range" thumb-label min="0" max="60">
-                    </v-range-slider>
+                    <v-range-slider v-model="configData['temp-thresholds']" label="temperature range" thumb-label min="0" max="60"/>
                   </v-container>
                 </v-row>
                 <v-row justify="space-around">

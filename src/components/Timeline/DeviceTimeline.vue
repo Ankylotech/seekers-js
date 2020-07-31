@@ -88,7 +88,7 @@
                       focusText
                           .html(text)
                           .attr("x", x(selectedData.date) + 5)
-                          .attr("y", y(selectedData.value) - 5)
+                          .attr("y", 15)
                       if(x(selectedData.date) > x(dateMax)/2){
                         focusText.attr("x",x(selectedData.date) - text.length*9 )
                             .attr("text-anchor", "right")
