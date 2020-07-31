@@ -1,13 +1,13 @@
 <template>
-    <v-card class="pa-4">
+    <div class="pa-4">
         <div v-if="hasLoadedApp" id="grid" class="pa-4">
-            <DeviceTimeline v-for="device in devices" :token="token" :key="device" :colors="colors" :application="ID" :device="device"></DeviceTimeline>
+            <DeviceTimeline class="pa-2" v-for="device in devices" :token="token" :key="device" :colors="colors" :application="ID" :device="device"></DeviceTimeline>
         </div>
         <v-card v-else>
             <h2> Loading Device Data. Please Wait. </h2>
             <v-progress-linear indeterminate></v-progress-linear>
         </v-card>
-    </v-card>
+    </div>
 </template>
 
 <script>

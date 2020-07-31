@@ -1,48 +1,50 @@
 <template>
     <v-container>
         <v-col>
-            <v-btn class="my-14" v-on:click="openAddConfigDialog">
+            <v-btn class="my-4" v-on:click="dialog = true">
                 <v-icon>mdi-plus</v-icon> Add new Configuration
             </v-btn>
         </v-col>
         <v-dialog v-model="dialog">
-            <v-card>
-                <v-card-title>Add a new Configuration</v-card-title>
-                <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <v-radio-group v-model="config" required>
-                                <v-radio v-for="item in ['co2','temperature']" :key="item" :label="item" :value="item"></v-radio>
-                            </v-radio-group>
-                        </v-row>
-                        <v-row>
-                            <v-select :items="devices" :value="devices[0]" v-model="device" label="Choose Device">
-                                Device
-                            </v-select>
-                        </v-row>
-                        <v-divider/>
-                        <v-row>
-                            <v-container v-if="config==='co2'">
-                                <v-slider v-model="configData['warn-threshold']" label="warn-threshold" thumb-label min="400" max="3000">
-                                </v-slider>
-                                <v-slider v-model="configData['error-threshold']" label="error-threshold" thumb-label :min="configData['warn-threshold']+1" max="3000">
-                                </v-slider>
-                            </v-container>
-                            <v-container v-else>
-                                <v-range-slider v-model="configData['temp-thresholds']" label="temperature range" thumb-label min="0" max="60">
-                                </v-range-slider>
-                            </v-container>
-                        </v-row>
-                        <v-row justify="space-around">
-                            <v-spacer/>
-                            <v-spacer/>
-                            <v-spacer/>
-                            <v-btn @click="dialog = false"> Cancel </v-btn>
-                            <v-btn @click="sendNewConfig"> Apply </v-btn>
-                        </v-row>
-                    </v-container>
-                </v-card-text>
-            </v-card>
+          <v-card>
+            <v-container>
+              <v-card-title>Add a new Configuration</v-card-title>
+              <v-divider/>
+              <v-card-text>
+                <v-row>
+                  <v-radio-group v-model="config" required>
+                    <v-radio v-for="item in ['co2','temperature']" :key="item" :label="item" :value="item"></v-radio>
+                  </v-radio-group>
+                </v-row>
+                <v-divider/>
+                <v-row>
+                  <v-select :items="devices" :value="devices[0]" v-model="device" label="Choose Device">
+                        Device
+                  </v-select>
+                </v-row>
+                <v-divider/>
+                <v-row>
+                  <v-container v-if="config==='co2'">
+                    <v-slider v-model="configData['warn-threshold']" label="warn-threshold" thumb-label min="400" max="3000">
+                    </v-slider>
+                    <v-slider v-model="configData['error-threshold']" label="error-threshold" thumb-label :min="configData['warn-threshold']+1" max="3000">
+                    </v-slider>
+                  </v-container>
+                  <v-container v-else>
+                    <v-range-slider v-model="configData['temp-thresholds']" label="temperature range" thumb-label min="0" max="60">
+                    </v-range-slider>
+                  </v-container>
+                </v-row>
+                <v-row justify="space-around">
+                  <v-spacer/>
+                  <v-spacer/>
+                  <v-spacer/>
+                  <v-btn @click="dialog = false"> Cancel </v-btn>
+                  <v-btn @click="sendNewConfig"> Apply </v-btn>
+                </v-row>
+              </v-card-text>
+            </v-container>
+          </v-card>
         </v-dialog>
     </v-container>
 </template>
@@ -66,9 +68,6 @@
             }
         },
         methods: {
-            openAddConfigDialog(){
-                this.dialog = true;
-            },
             async sendNewConfig(){
                 this.dialog=false;
                 if(this.device !== '' && this.configData !== {}){

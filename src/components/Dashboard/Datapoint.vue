@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-card-text class="red--text" color="red" id="red" v-if="isRed">{{name}} : {{value}} </v-card-text>
-        <v-card-text class="orange--text" color="#ffa500" id="orange" v-else-if="isOrange">{{name}} : {{value}}</v-card-text>
+        <v-card-text class="red--text" color="red" v-if="isRed">{{name.toUpperCase()}} : {{value}} </v-card-text>
+        <v-card-text class="orange--text" color="orange" v-else-if="isOrange">{{name.toUpperCase()}} : {{value}}</v-card-text>
         <v-card-text v-else>{{name}} : {{value}}</v-card-text>
     </div>
 </template>
@@ -58,10 +58,3 @@
         }
     }
 </script>
-
-<style scoped>
-    #red {
-        fill: #ff0000;
-        color: red;
-    }
-</style>

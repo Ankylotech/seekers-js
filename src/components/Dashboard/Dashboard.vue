@@ -1,6 +1,6 @@
 <template>
-    <v-card class="pa-4">
-        <v-container v-if="hasLoadedConf && hasLoadedApp">
+    <div class="pa-4">
+        <div v-if="hasLoadedConf && hasLoadedApp">
             <v-row class="pa-4">
                 <v-col md="3" v-for="device in deviceData" :key="device.name" >
                     <v-spacer/>
@@ -8,12 +8,12 @@
                     <v-spacer/>
                 </v-col>
             </v-row>
-        </v-container>
+        </div>
         <v-card v-else>
             <h2> Loading Devices. Please Wait. </h2>
             <v-progress-linear indeterminate></v-progress-linear>
         </v-card>
-    </v-card>
+    </div>
 </template>
 
 <script>

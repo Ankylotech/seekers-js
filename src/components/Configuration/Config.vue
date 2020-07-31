@@ -1,6 +1,6 @@
 
 <template>
-    <v-card v-if="hasLoadedConf">
+    <div v-if="hasLoadedConf">
         <AddConfigBtn class="pa-0" :token="token" :devices="allDevices" :app-i-d="ID" :app-name="application"/>
         <v-container  v-for="(data,index) in configs"  :key="index">
             <v-card>
@@ -11,7 +11,7 @@
         <v-card v-if="configs.length === 0">
             <v-card-title> There are currently no Configurations available</v-card-title>
         </v-card>
-    </v-card>
+    </div>
     <v-card v-else>
         <h2> Loading Configurations. Please Wait. </h2>
         <v-progress-linear indeterminate></v-progress-linear>
