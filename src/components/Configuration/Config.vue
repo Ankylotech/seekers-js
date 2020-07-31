@@ -3,7 +3,7 @@
     <div v-if="hasLoadedConf">
         <AddConfigBtn class="pa-0" :token="token" :devices="allDevices" :app-i-d="ID" :app-name="application"/>
         <v-container  v-for="(data,index) in configs"  :key="index">
-            <v-card>
+            <v-card min-width="200">
                 <h2 class="pa-4"> {{data.config}} Configurations: </h2>
                 <Deviceconfigs :config="data" ></Deviceconfigs>
             </v-card>

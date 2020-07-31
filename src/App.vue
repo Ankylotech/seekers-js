@@ -44,7 +44,7 @@
             </v-tabs>
           </template>
         </v-app-bar>
-        <v-main>
+        <v-main id="scrolling">
             <keep-alive>
               <Dashboard :token="token" v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
               <Configuration v-else-if="currentTabComponent==='Configuration'" :application="applicationName"

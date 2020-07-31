@@ -2,7 +2,7 @@
     <v-container>
         <v-row class="pa-4">
             <v-col md="3" v-for="device in devices" :key="device" >
-                <v-card>
+                <v-card min-width="150">
                     <v-card-title> {{device}} </v-card-title>
                     <v-card-text v-for="(data,index) in deviceConfigs[device]" :key="index">
                         {{index}} : {{data}}

@@ -1,5 +1,5 @@
 <template>
-    <v-card id="full" class="pa-4">
+    <v-card id="full" class="pa-4" min-width="200">
         <v-card-title>{{name}}</v-card-title>
         <v-divider light/>
         <Datapoint  v-for="(data, index) in deviceData" :key="data.value" :deviceName="name" :value="data" :config="config" :name="index" :hasConfig="hasConfig" />
