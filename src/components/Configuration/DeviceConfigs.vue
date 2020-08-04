@@ -9,10 +9,6 @@
           <v-col
               v-for="item in props.items"
               :key="item.name"
-              cols="12"
-              sm="6"
-              md="4"
-              lg="3"
           >
             <v-card min-width="270">
               <v-card-title class="subheading font-weight-bold">{{ item.name }}</v-card-title>
@@ -55,6 +51,18 @@
         },
         mounted() {
           this.configs['devices'].forEach((device) => {
+            Object.keys(this.configs['device-configs'][device]).forEach((key) => {
+              const sortable = [];
+              Object.keys(this.configs['device-configs'][device][key]).forEach((key2) => {
+                sortable.push(key2);
+              })
+              sortable.sort();
+              let data = {};
+              sortable.forEach((value => {
+                data[value] = this.configs['device-configs'][device][key][value];
+              }));
+              this.configs['device-configs'][device][key] = data;
+            })
             this.configs['device-configs'][device]['name'] = device;
             this.deviceList.push(this.configs['device-configs'][device]);
           })
