@@ -40,7 +40,7 @@
                       else if(1400 <= parseInt(this.value)) this.isOrange = true;
                     }else if(this.name === 'temperature'){
                       if(30 <= parseInt(this.value)) this.isRed = true;
-                      else if(0 >= parseInt(this.value)) this.isRed = true;
+                      else if(10 >= parseInt(this.value)) this.isRed = true;
                     }
                   }
                 }
