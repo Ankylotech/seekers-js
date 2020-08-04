@@ -1,14 +1,14 @@
 
 <template>
     <div v-if="hasLoadedConf">
-        <AddConfigBtn class="pa-0" :token="token" :devices="allDevices" :app-i-d="ID" :app-name="application"/>
-        <v-container  v-for="(data,index) in configs"  :key="index">
-            <v-card min-width="200">
-                <h2 class="pa-4"> {{data.config}} Configurations: </h2>
-                <Deviceconfigs :config="data" ></Deviceconfigs>
-            </v-card>
-        </v-container>
-        <v-card v-if="configs.length === 0">
+        <AddConfigBtn class="pa-0" :token="token" :devices="allDevices" :app-i-d="ID" :app-name="application"  />
+
+        <v-row justify="space-around">
+          <v-col  v-for="(index) in configs['devices']" :key="index">
+            <Deviceconfigs  :config="configs['device-configs'][index]" :name="index" ></Deviceconfigs>
+          </v-col>
+        </v-row>
+        <v-card v-if="!hasConf">
             <v-card-title> There are currently no Configurations available</v-card-title>
         </v-card>
     </div>
@@ -37,10 +37,11 @@
         },
         data: function() {
             return{
-                configs:[],
+                configs:{},
                 hasConfig: [],
                 hasLoadedConf:false,
                 allDevices: [],
+                hasConf: false,
             }
         },
         mounted() {
@@ -53,28 +54,54 @@
                 this.hasLoadedConf = false;
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/config').then((response) => {
                     response.json().then((configData) => {
-                        this.configs = [];
-                        for(let key in configData) {
-                            if(configData[key] != null) this.configs.push(configData[key]);
+                        this.configs = configData;
+                        delete this.configs['applicationID'];
+                        delete this.configs['applicationName'];
+                        if(this.configs['devices']) {
+                          this.hasConf = true;
+                          this.configs['devices'].sort();
+                          let rawData = configData['device-configs']
+                          const sortable = [];
+                          for (let device in rawData) {
+                            sortable.push(device);
+                          }
+                          sortable.sort();
+                          let data = {};
+                          sortable.forEach(function (item) {
+                            let rawData2 = rawData[item];
+                            const sortable2 = [];
+                            for (let device in rawData2) {
+                              sortable2.push(device);
+                            }
+                            sortable2.sort();
+                            let data2 = {};
+                            sortable2.forEach(function (item2) {
+                              data2[item2] = rawData2[item2]
+                            });
+                            data[item] = data2
+                          });
+                          this.configs['device-configs'] = data;
                         }
                         this.hasLoadedConf = true;
 
                     })
                 });
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/devices').then((response) => {
-                    response.json().then((configData) => {
-                        this.allDevices = configData;
+                    response.json().then((devices) => {
+                        this.allDevices = devices;
                         this.allDevices.sort();
                     })
                 });
             },
             addConfig(json){
-                for(let i = 0; i < this.configs.length; i++) {
-                    if (json.config === this.configs[i].config) {
-                        this.configs[i]['device-config'][json.deviceName] = json['device-config'];
-                        if(!this.configs[i]['devices'].includes(json.deviceName)) this.configs[i]['devices'].push(json.deviceName);
-                    }
-                }
+              let name = json.deviceName;
+              let conf = json.config;
+              if(!this.configs['devices'] !== undefined) this.configs['devices'] = [];
+              if(!this.configs['devices'].includes(name)) this.configs['devices'].push(name);
+              this.configs['devices'].sort();
+              if(!this.configs['device-configs']) this.configs['device-configs'] = {};
+              if(!this.configs['device-configs'][name]) this.configs['device-configs'][name] = {};
+              this.configs['device-configs'][name][conf] = json['device-configs'];
             }
         }
     }

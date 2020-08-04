@@ -15,7 +15,7 @@
         name: "DevicePanel",
         props: {
             rawData: Object,
-            config: Array,
+            config: Object,
             token: String
         },
         data: function() {
@@ -46,10 +46,8 @@
                 data[item[0]]=item[1]
             });
             this.deviceData = data;
-            if(this.config !== undefined ){
+            if(this.config['device-configs'] !== undefined){
                 this.hasConfig = true;
-            }else {
-                console.log("he does not config")
             }
         }
 

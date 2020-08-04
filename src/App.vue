@@ -46,7 +46,7 @@
         </v-app-bar>
         <v-main id="scrolling">
             <keep-alive>
-              <Dashboard :token="token" v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID"/>
+              <Dashboard :token="token" v-if="currentTabComponent==='Dashboard'" :application="applicationName" :ID="applicationID" />
               <Configuration v-else-if="currentTabComponent==='Configuration'" :application="applicationName"
                              :ID="applicationID" :token="token"></Configuration>
               <Timeline v-else :token="token" :application="applicationName" :ID="applicationID"/>
@@ -123,7 +123,7 @@
         },
         token: "",
         currentTab: 'Dashboard',
-        tabs: ['Dashboard','Timeline','Configuration']
+        tabs: ['Dashboard','Timeline','Configuration'],
       };
     },
     computed: {

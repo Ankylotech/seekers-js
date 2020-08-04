@@ -24,7 +24,7 @@
         props: {
             application: String,
             ID: String,
-            token: String
+            token: String,
         },
         components: {
             DevicePanel
@@ -35,7 +35,7 @@
                 hasLoadedConf: false,
                 deviceData:{},
                 applicationID: 0,
-                configs: []
+                configs: {}
             }
         },
         mounted() {
@@ -47,40 +47,41 @@
             async fetchData(application = this.ID) {
                 this.hasLoadedConf = false;
                 this.hasLoadedApp = false;
-                fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application).then((response) => {
+                  fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application).then((response) => {
                     response.json().then((applicationData) => {
-                        this.hasLoadedApp = true;
-                        this.applicationID = applicationData.applicationID;
-                        let rawData = applicationData.devices
-                        const sortable = [];
-                        for (let device in rawData) {
-                            sortable.push([device, rawData[device]]);
-                        }
-
-                        sortable.sort(function(a, b) {
-                            return parseInt(a[0].replace('ERS',''),10) - parseInt(b[0].replace('ERS',''),10);
-                        });
-                        let data = {};
-                        sortable.forEach(function(item){
-                            data[item[0]]=item[1]
-                        });
-                        this.deviceData = data;
+                      this.hasLoadedApp = true;
+                      this.applicationID = applicationData.applicationID;
+                      let rawData = applicationData.devices
+                      const sortable = [];
+                      for (let device in rawData) {
+                        sortable.push(device);
+                      }
+                      sortable.sort();
+                      let data = {};
+                      sortable.forEach(function (item) {
+                        data[item] = rawData[item];
+                      });
+                      this.deviceData = data;
                     })
-                });
+                  });
                 fetch('https://europe-west1-lorawan-qaware-rosenheim.cloudfunctions.net/api/applications/' + application + '/config').then((response) => {
                     response.json().then((configData) => {
                         this.configs = configData;
+                        delete this.configs['applicationID'];
+                        delete this.configs['applicationName'];
                         this.hasLoadedConf = true;
                     })
                 });
             },
             addConfig(json){
-                for(let i = 0; i < this.configs.length; i++) {
-                    if (json.config === this.configs[i].config) {
-                        this.configs[i]['device-config'][json.deviceName] = json['device-config'];
-                        if(!(this.configs[i]['devices'].includes(json.deviceName))) this.configs[i]['devices'].push(json.deviceName);
-                    }
-                }
+              let name = json.deviceName;
+              let conf = json.config;
+              if(!this.configs['devices']) this.configs['devices'] = [];
+              if(!this.configs['devices'].includes(name)) this.configs['devices'].push(name);
+              this.configs['devices'].sort();
+              if(!this.configs['device-configs']) this.configs['device-configs'] = {};
+              if(!this.configs['device-configs'][name]) this.configs['device-configs'][name] = {};
+              this.configs['device-configs'][name][conf] = json['device-configs'];
             }
         }
     }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card-text class="red--text" color="red" v-if="isRed">{{name.toUpperCase()}} : {{value}} </v-card-text>
+        <v-card-subtitle class="red--text" color="red" v-if="isRed">{{name.toUpperCase()}} : {{value}} </v-card-subtitle>
         <v-card-text class="orange--text" color="orange" v-else-if="isOrange">{{name.toUpperCase()}} : {{value}}</v-card-text>
         <v-card-text v-else>{{name}} : {{value}}</v-card-text>
     </div>
@@ -12,7 +12,7 @@
         props: {
             name: String,
             value: String,
-            config: Array,
+            config: Object,
             hasConfig: Boolean,
             deviceName: String
         },
@@ -24,35 +24,17 @@
         },
         mounted() {
             if(this.hasConfig){
-                if(this.name === 'co2'){
-                    let index;
-                    for(let i = 0; i < this.config.length; i++){
-                        if(this.config[i].config === "co2"){
-                            index = i;
-                        }
+                if(this.config.devices.includes(this.deviceName)){
+                  let configs = this.config['device-configs'][this.deviceName];
+                  if(configs[this.name]){
+                    if(this.name === 'co2'){
+                      if(configs.co2['high-threshold'] <= parseInt(this.value)) this.isRed = true;
+                      else if(configs.co2['low-threshold'] <= parseInt(this.value)) this.isOrange = true;
+                    }else if(this.name === 'temperature'){
+                      if(configs.temperature['hot-threshold'] <= parseInt(this.value)) this.isRed = true;
+                      else if(configs.temperature['cold-threshold'] >= parseInt(this.value)) this.isRed = true;
                     }
-                    if(this.config[index] != null &&this.config[index]["device-config"][this.deviceName]) {
-                        if (parseInt(this.value) > this.config[index]["device-config"][this.deviceName]["error-threshold"]) this.isRed = true;
-                        else if (parseInt(this.value) > this.config[index]["device-config"][this.deviceName]["warn-threshold"]) this.isOrange = true;
-                    }else {
-                        if (parseInt(this.value) > 2000) this.isRed = true;
-                        else if (parseInt(this.value) > 1400) this.isOrange = true;
-                    }
-                }else if(this.name === 'temperature'){
-                    let index;
-                    for(let i = 0; i < this.config.length; i++){
-                        if(this.config[i].config === "temperature"){
-                            index = i;
-                        }
-                    }
-                    if(this.config[index] != null && this.config[index]["device-config"][this.deviceName]) {
-                        if (parseFloat(this.value) < this.config[index]["device-config"][this.deviceName]["lower-warning"]) this.isRed = true;
-                        else if (parseFloat(this.value) > this.config[index]["device-config"][this.deviceName]["upper-warning"]) this.isRed = true;
-                    }else {
-                        if (parseFloat(this.value) < 0) this.isRed = true;
-                        else if (parseFloat(this.value) > 30) this.isRed = true;
-
-                    }
+                  }
                 }
             }
         }
