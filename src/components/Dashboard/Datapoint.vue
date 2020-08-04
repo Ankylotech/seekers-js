@@ -34,6 +34,14 @@
                       if(configs.temperature['hot-threshold'] <= parseInt(this.value)) this.isRed = true;
                       else if(configs.temperature['cold-threshold'] >= parseInt(this.value)) this.isRed = true;
                     }
+                  }else {
+                    if(this.name === 'co2'){
+                      if(2000 <= parseInt(this.value)) this.isRed = true;
+                      else if(1400 <= parseInt(this.value)) this.isOrange = true;
+                    }else if(this.name === 'temperature'){
+                      if(30 <= parseInt(this.value)) this.isRed = true;
+                      else if(0 >= parseInt(this.value)) this.isRed = true;
+                    }
                   }
                 }
             }

@@ -3,7 +3,7 @@
     <div v-if="hasLoadedConf">
         <AddConfigBtn class="pa-0" :token="token" :devices="allDevices" :app-i-d="ID" :app-name="application"  />
 
-        <v-row justify="space-around">
+        <v-row >
           <v-col  v-for="(index) in configs['devices']" :key="index">
             <Deviceconfigs  :config="configs['device-configs'][index]" :name="index" ></Deviceconfigs>
           </v-col>
