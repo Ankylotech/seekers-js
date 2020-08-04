@@ -5,7 +5,7 @@
                 <v-icon>mdi-plus</v-icon> Add new Configuration
             </v-btn>
         </v-col>
-        <v-dialog v-model="dialog">
+        <v-dialog v-model="dialog" max-width="500">
           <v-card>
             <v-container>
               <v-card-title>Add a new Configuration</v-card-title>
