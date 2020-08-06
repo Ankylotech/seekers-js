@@ -97,7 +97,7 @@ export default {
         json.config = this.config;
         json.deviceName = this.device;
         json['device-configs'] = this.configData;
-        if(!this.optional[0]) delete this.configData['sendTo']
+        if (!this.optional[0]) delete this.configData['sendTo']
         json.applicationName = this.appName;
         json.applicationID = this.appID;
 
