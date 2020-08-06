@@ -234,7 +234,7 @@ export default {
           return '°C';
         case 'light':
           return 'Lux';
-        case 'vdd':
+        case 'battery-voltage':
           return 'V';
         case 'humidity':
           return '%Rh';
@@ -258,25 +258,5 @@ input {
 
 .axis + .axis g text {
   display: none;
-}
-
-#co2 {
-  color: red;
-}
-
-#temperature {
-  color: blue;
-}
-
-#humidity {
-  color: #00ffff;
-}
-
-#light {
-  color: orange;
-}
-
-#motion {
-  color: #556b2f;
 }
 </style>
