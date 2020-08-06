@@ -10,7 +10,7 @@
               v-for="item in props.items"
               :key="item.name"
           >
-            <v-card min-width="270">
+            <v-card min-width="270" max-width="350">
               <v-card-title class="subheading font-weight-bold">{{ item.name }}</v-card-title>
 
               <v-container v-for="(key,index) in item" :key="index + Object.keys(key).length">
