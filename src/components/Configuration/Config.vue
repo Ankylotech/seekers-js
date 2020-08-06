@@ -91,7 +91,14 @@ export default {
       let name = json.deviceName;
       let conf = json.config;
       if (!this.configs['devices'] !== undefined) this.configs['devices'] = [];
-      if (!this.configs['devices'].includes(name)) this.configs['devices'].push(name);
+      let arr = this.configs['devices'];
+      if (arr.includes(name)) for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === name) {
+          this.configs['devices'].splice(i, 1);
+          break;
+        }
+      }
+      this.configs['devices'].push(name);
       this.configs['devices'].sort();
       if (!this.configs['device-configs']) this.configs['device-configs'] = {};
       if (!this.configs['device-configs'][name]) this.configs['device-configs'][name] = {};
@@ -99,6 +106,8 @@ export default {
     }
   }
 }
+
+
 </script>
 
 <style scoped>
