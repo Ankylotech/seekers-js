@@ -12,17 +12,16 @@ import P5 from "p5";
 
 export default {
   name: "Simulator",
-  data: function(){
+  data: function () {
     return {
-      files: [],
       p5: P5,
     }
   },
   mounted() {
-    EventBus.$on('getFiles',this.getFiles)
+    EventBus.$on('getFiles', this.getFiles)
   },
   methods: {
-    p5script(p5,files) {
+    p5script(p5, files) {
       let player1;
       let player2;
       let balls = [];
@@ -31,11 +30,11 @@ export default {
       p5.setup = function () {
         let canvas = p5.createCanvas(500, 500);
         canvas.parent("p5Canvas");
-        for(let i = 0; i < ballNum; i++){
+        for (let i = 0; i < ballNum; i++) {
           balls.push(new Ball(p5));
         }
-        player1 = new Player(files[0],p5,0,balls);
-        player2 = new Player(files[1],p5,1,balls);
+        player1 = new Player(files[0], p5, 0, balls);
+        player2 = new Player(files[1], p5, 1, balls);
       }       // NOTE: Draw is here
       p5.draw = function () {
         p5.background(0);
@@ -47,10 +46,10 @@ export default {
 
       }
     },
-    getFiles(files){
+    getFiles(files) {
       console.log(files);
       this.p5 = new P5((p5) => {
-        this.p5script(p5,files)
+        this.p5script(p5, files)
       })
     }
   }
