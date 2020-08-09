@@ -1,3 +1,3 @@
-# Web-UI
+# Seekers
 
-A Web-UI to visualize the Sensor data
+compete with your friends in this Programming tournament

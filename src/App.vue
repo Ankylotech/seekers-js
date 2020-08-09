@@ -15,12 +15,6 @@ export default {
     Selector,
     Simulator
   },
-  data: function () {
-    return {
-      hasData: false,
-      files: []
-    };
-  }
 };
 </script>
 
