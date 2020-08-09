@@ -2,6 +2,7 @@ export default class Ball {
     constructor(p5){
         this.p5 = p5;
         this.reset();
+        this.radius = 10;
     }
 
     reset(){
@@ -15,6 +16,6 @@ export default class Ball {
         this.posX += this.velX;
         this.posY += this.velY;
         this.p5.fill(255,0,100);
-        this.p5.ellipse(this.posX,this.posY,10,10);
+        this.p5.ellipse(this.posX,this.posY,this.radius,this.radius);
     }
 }

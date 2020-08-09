@@ -29,21 +29,19 @@ export default {
       let ballNum = 5;
       // NOTE: Set up is here
       p5.setup = function () {
-        console.log("setup")
-        player1 = new Player(files[0],p5,0);
-        player2 = new Player(files[1],p5,1);
         let canvas = p5.createCanvas(500, 500);
+        canvas.parent("p5Canvas");
         for(let i = 0; i < ballNum; i++){
           balls.push(new Ball(p5));
         }
-        canvas.parent("p5Canvas");
+        player1 = new Player(files[0],p5,0,balls);
+        player2 = new Player(files[1],p5,1,balls);
       }       // NOTE: Draw is here
       p5.draw = function () {
-        console.log("draw");
+        p5.background(0);
         balls.forEach((ball) => {
           ball.update();
         })
-        p5.background(0);
         player1.draw();
         player2.draw();
 
