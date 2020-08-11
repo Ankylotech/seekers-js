@@ -1,22 +1,33 @@
 export default class Player {
-    constructor(file,p5,side,balls){
+    constructor(file, p5, side, goals) {
         this.player = require('../bots/' + file.name);
-        this.balls = balls;
+        this.goals = goals;
         this.seekers = [];
         this.enemys = [];
         this.p5 = p5;
         this.side = side;
-        this.color = {
-            red: Math.random()*255,
-            green: Math.random()*255,
-            blue: Math.random()*255,
-        }
+        this.color = this.p5.color(Math.random()*255,Math.random()*255,Math.random*255);
         this.player.create(this);
     }
+
     draw() {
         this.player.update();
         this.seekers.forEach((seeker) => {
             seeker.draw();
+        })
+        this.seekers[0].setTarget(this.p5.createVector(10,10).add(this.seekers[0].pos))
+        this.seekers.forEach((seeker) => {
+            this.seekers.forEach(ally => {
+                seeker.seekerCollide(ally);
+            });
+            this.enemys.forEach(enemy => {
+                seeker.seekerCollide(enemy);
+            });
+            this.goals.forEach(goal => {
+                seeker.collide(goal);
+                goal.collide(seeker);
+            });
+
         })
     }
 }

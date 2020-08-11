@@ -1,7 +1,7 @@
 <template>
   <v-app id="app">
-    <Selector ></Selector>
-    <Simulator ></Simulator>
+    <Selector></Selector>
+    <Simulator></Simulator>
   </v-app>
 </template>
 

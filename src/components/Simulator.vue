@@ -7,7 +7,7 @@
 <script>
 import Player from '../players/player.js'
 import {EventBus} from "@/components/event-bus";
-import Ball from "../ball.js"
+import Goal from "../objects/goal.js"
 import P5 from "p5";
 
 export default {
@@ -24,23 +24,23 @@ export default {
     p5script(p5, files) {
       let player1;
       let player2;
-      let balls = [];
-      let ballNum = 5;
+      let goals = [];
+      let goalNum = 50;
       // NOTE: Set up is here
       p5.setup = function () {
         let canvas = p5.createCanvas(500, 500);
         canvas.parent("p5Canvas");
-        for (let i = 0; i < ballNum; i++) {
-          balls.push(new Ball(p5));
+        for (let i = 0; i < goalNum; i++) {
+          goals.push(new Goal(p5));
         }
-        player1 = new Player(files[0], p5, 0, balls);
-        player2 = new Player(files[1], p5, 1, balls);
+        player1 = new Player(files[0], p5, 0, goals);
+        player2 = new Player(files[1], p5, 1, goals);
         player1.enemys = player2.seekers;
         player2.enemys = player1.seekers;
       }       // NOTE: Draw is here
       p5.draw = function () {
         p5.background(0);
-        balls.forEach((ball) => {
+        goals.forEach((ball) => {
           ball.update();
         })
         player1.draw();

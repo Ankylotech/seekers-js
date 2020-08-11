@@ -1,4 +1,4 @@
-import Basic from "@/seeker-types/basic";
+import Basic from "@/objects/basic";
 
 export function create(player) {
     this.player = player;

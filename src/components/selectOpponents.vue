@@ -1,11 +1,13 @@
 <template>
   <v-container>
-    <v-file-input chips  accept="application/x-javascript" multiple label="Load your Bots" v-model="files"></v-file-input>
+    <v-file-input chips accept="application/x-javascript" multiple label="Load your Bots"
+                  v-model="files"></v-file-input>
   </v-container>
 </template>
 
 <script>
 import {EventBus} from './event-bus.js';
+
 export default {
   name: "selectOpponents",
   props: {
@@ -16,12 +18,12 @@ export default {
       files: []
     }
   },
-  updated: function(){
+  updated: function () {
     this.file();
   },
   methods: {
     file() {
-      if(this.files.length >= 2) {
+      if (this.files.length >= 2) {
         EventBus.$emit('getFiles', this.files)
       }
     }
