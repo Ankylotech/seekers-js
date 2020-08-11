@@ -3,6 +3,7 @@ export default class Player {
         this.player = require('../bots/' + file.name);
         this.balls = balls;
         this.seekers = [];
+        this.enemys = [];
         this.p5 = p5;
         this.side = side;
         this.color = {

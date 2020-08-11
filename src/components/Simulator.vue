@@ -35,6 +35,8 @@ export default {
         }
         player1 = new Player(files[0], p5, 0, balls);
         player2 = new Player(files[1], p5, 1, balls);
+        player1.enemys = player2.seekers;
+        player2.enemys = player1.seekers;
       }       // NOTE: Draw is here
       p5.draw = function () {
         p5.background(0);
