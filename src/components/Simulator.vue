@@ -26,7 +26,7 @@ export default {
       let player2;
       let goals = [];
       let goalNum = 50;
-      // NOTE: Set up is here
+
       p5.setup = function () {
         let canvas = p5.createCanvas(500, 500);
         canvas.parent("p5Canvas");
@@ -37,11 +37,12 @@ export default {
         player2 = new Player(files[1], p5, 1, goals);
         player1.enemys = player2.seekers;
         player2.enemys = player1.seekers;
-      }       // NOTE: Draw is here
+      }
+
       p5.draw = function () {
         p5.background(0);
-        goals.forEach((ball) => {
-          ball.update();
+        goals.forEach((goal) => {
+          goal.update();
         })
         player1.draw();
         player2.draw();

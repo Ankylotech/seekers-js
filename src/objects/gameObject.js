@@ -7,6 +7,7 @@ export default class GameObject {
         this.maxSpeed = 5;
         this.color = this.p5.color(Math.random() * 255, Math.random() * 255, Math.random * 255);
         this.radius = 4;
+        this.pos = p5.createVector(Math.random()*p5.width, Math.random()*p5.height)
     }
 
 
@@ -54,6 +55,7 @@ export default class GameObject {
         if (gameObject === this || (this.pos.x === gameObject.pos.x && this.pos.y === gameObject.pos.y)) return;
         if (this.dist(this.pos, gameObject.pos) <= this.radius + gameObject.getRadius(this)) {
             console.log('collision')
+            console.log(this.pos.x + '-' + gameObject.pos.x + '/' + this.pos.y + '-' + gameObject.pos.y)
             console.log(gameObject)
             let zwischen = this.subVector(this.pos, gameObject.pos);
             if(zwischen.mag() === 0) return;

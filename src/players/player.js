@@ -18,14 +18,17 @@ export default class Player {
         this.seekers[0].setTarget(this.p5.createVector(10,10).add(this.seekers[0].pos))
         this.seekers.forEach((seeker) => {
             this.seekers.forEach(ally => {
-                seeker.seekerCollide(ally);
+                console.log(ally);
+                //seeker.seekerCollide(ally);
             });
             this.enemys.forEach(enemy => {
-                seeker.seekerCollide(enemy);
+                console.log(enemy);
+                //seeker.seekerCollide(enemy);
             });
             this.goals.forEach(goal => {
-                seeker.collide(goal);
-                goal.collide(seeker);
+                console.log(seeker + "-" + goal);
+                /*seeker.collide(goal);
+                goal.collide(seeker);*/
             });
 
         })
