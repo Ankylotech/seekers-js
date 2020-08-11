@@ -66,7 +66,7 @@ export default class Seeker extends GameObject {
                     seeker2.disabledTime = 90;
                 }
             }
-            super.collide(seeker2);
+            //super.collide(seeker2);
         }
     }
 }

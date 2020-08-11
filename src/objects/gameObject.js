@@ -53,7 +53,7 @@ export default class GameObject {
 
     collide(gameObject) {
         if (gameObject === this || (this.pos.x === gameObject.pos.x && this.pos.y === gameObject.pos.y)) return;
-        if (this.dist(this.pos, gameObject.pos) <= this.radius + gameObject.getRadius(this)) {
+        if (this.dist(this.pos, gameObject.pos) <= this.radius + gameObject.getRadius(this) && !isNaN(gameObject.pos.x) && !isNaN(gameObject.pos.y) && !isNaN(this.pos.x) && !isNaN(this.pos.y)) {
             console.log('collision')
             console.log(this.pos.x + '-' + gameObject.pos.x + '/' + this.pos.y + '-' + gameObject.pos.y)
             console.log(gameObject)
