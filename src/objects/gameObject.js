@@ -5,14 +5,16 @@ export default class GameObject {
         this.acc = p5.createVector(0, 0);
         this.mass = 1;
         this.maxSpeed = 5;
-        this.color = this.p5.color(Math.random() * 255, Math.random() * 255, Math.random * 255);
+        this.color = {red: Math.random() * 255, green: Math.random() * 255, blue: Math.random * 255};
         this.radius = 4;
-        this.pos = p5.createVector(Math.random()*p5.width, Math.random()*p5.height)
+        this.acceleration = 0.2;
+        this.pos = p5.createVector(Math.random() * p5.width, Math.random() * p5.height)
     }
 
 
     draw() {
-        this.vel.mult(0.98);
+        this.acc.limit(this.acceleration);
+        this.vel.mult(0.97);
 
         this.vel.x += this.acc.x;
         this.vel.y += this.acc.y;
@@ -25,8 +27,10 @@ export default class GameObject {
         this.pos = this.boundBy(this.pos, 0, this.p5.width, 0, this.p5.height)
 
 
-        this.p5.fill(this.color);
-        this.p5.ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2)
+        this.p5.stroke(this.color.red,this.color.green,this.color.blue);
+        this.p5.strokeWeight(this.radius * 2)
+        this.p5.point(this.pos.x, this.pos.y)
+        this.acc.setMag(0);
     }
 
     boundBy(v, lowerX, upperX, lowerY, upperY, div = 1) {
@@ -39,8 +43,8 @@ export default class GameObject {
     }
 
     dist(v1, v2) {
-        let connect = this.subVector(v1,v2)
-        return Math.sqrt(connect.x*connect.x+connect.y*connect.y);
+        let connect = this.subVector(v1, v2);
+        return Math.sqrt(connect.x * connect.x + connect.y * connect.y);
     }
 
     subVector(v1, v2) {
@@ -51,41 +55,54 @@ export default class GameObject {
         return this.radius;
     }
 
+    getNearest(list){
+        let nearest;
+        let min = Infinity;
+        list.forEach((obj) => {
+            if(this.dist(this.pos,obj.pos) < min){
+                nearest = obj;
+                min = this.dist(this.pos,obj.pos);
+            }
+        })
+        return nearest;
+    }
+
     collide(gameObject) {
         if (gameObject === this || (this.pos.x === gameObject.pos.x && this.pos.y === gameObject.pos.y)) return;
-        if (this.dist(this.pos, gameObject.pos) <= this.radius + gameObject.getRadius(this) && !isNaN(gameObject.pos.x) && !isNaN(gameObject.pos.y) && !isNaN(this.pos.x) && !isNaN(this.pos.y)) {
-            console.log('collision')
-            console.log(this.pos.x + '-' + gameObject.pos.x + '/' + this.pos.y + '-' + gameObject.pos.y)
-            console.log(gameObject)
+        if (!isNaN(gameObject.pos.x) && !isNaN(gameObject.pos.y) && !isNaN(this.pos.x) && !isNaN(this.pos.y) && this.dist(this.pos, gameObject.pos) <= this.radius + gameObject.getRadius(this)) {
             let zwischen = this.subVector(this.pos, gameObject.pos);
-            if(zwischen.mag() === 0) return;
-            console.log('connection: ' + zwischen.x + '-' + zwischen.y);
+            if (zwischen.mag() === 0) return;
 
             let angle1 = zwischen.angleBetween(this.vel);
-            console.log(angle1);
+            if (isNaN(angle1)) {
+                angle1 = zwischen.heading() - this.p5.PI;
+            }
             this.vel.rotate(angle1);
-            console.log('rotated');
 
             let angle2 = zwischen.angleBetween(gameObject.vel);
+            if (isNaN(angle2)) {
+                angle2 = zwischen.heading() - this.p5.PI;
+            }
+
             gameObject.vel.rotate(angle2);
 
-            let v1 = this.vel.y;
-            let v2 = gameObject.vel.y;
+            let v1 = this.vel.x;
+            let v2 = gameObject.vel.x;
 
             let m1 = this.mass;
             let m2 = gameObject.mass;
 
-            this.vel.y = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
-            gameObject.vel.y = ((m2 - m1) * v2 + 2 * m1 * v1) / (m2 + m1);
+            this.vel.x = -((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
+            gameObject.vel.x = -((m2 - m1) * v2 + 2 * m1 * v1) / (m2 + m1);
 
             this.vel.rotate(-angle1);
             gameObject.vel.rotate(-angle2);
 
             let dir = this.subVector(gameObject.pos, this.pos);
-            dir.setMag(this.dist(gameObject.pos, this.pos) - this.radius - gameObject.getRadius(this));
-            if (v1 + v2 <= 0.01) dir.mult(1.01);
+            dir.setMag(this.dist(gameObject.pos, this.pos) - (this.radius + gameObject.getRadius(this)));
+            if (v1 + v2 <= 0.1) dir.mult(1.01);
             this.pos.add(dir);
-            this.acc.setMag(0);
+            if (m1 <= m2) this.acc.setMag(0);
         }
     }
 }

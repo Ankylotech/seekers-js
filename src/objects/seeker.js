@@ -5,17 +5,27 @@ export default class Seeker extends GameObject {
         super(p5);
         this.player = player;
         this.color = this.player.color;
-        this.pos = p5.createVector(Math.random() * this.p5.width / 2 + this.p5.width * this.player.side,
+        this.pos = p5.createVector(Math.random() * this.p5.width / 2 + this.p5.width/2 * this.player.side,
             Math.random() * this.p5.height);
-
-        this.target = p5.createVector(this.pos.x + 10, this.pos.y + 10);
-        this.magnetStatus = 0;
-        this.radius = 5;
-        this.acceleration = 0.5;
         this.maxSpeed = 5;
+
+        this.target = p5.createVector(this.pos.x, this.pos.y);
+
+        this.magnetStatus = 0;
+        this.pullStrength = -0.75;
+        this.pushStrength = 1;
+
+        this.radius = 5;
+        this.mass = 3;
+        this.diams = []
+
+        for(let i = 0; i < 2; i++){
+            this.diams.push(this.radius*2 +  4*i*this.radius/2);
+        }
+
         this.disabled = false;
         this.disabledTime = 0;
-        this.mass = 3;
+
     }
 
     draw() {
@@ -23,6 +33,17 @@ export default class Seeker extends GameObject {
         if(this.disabledTime === 0) this.disabled = false;
         this.setAcc();
         if(this.disabled) this.acc.setMag(0);
+        this.p5.stroke(this.color.red,this.color.green,this.color.blue);
+        this.p5.strokeWeight(0.5);
+        if (this.magnetStatus !== 0 && !this.disabled) {
+            for (let i = 0; i < this.diams.length; i++) {
+                this.p5.ellipse(this.pos.x, this.pos.y, this.diams[i], this.diams[i]);
+                this.diams[i] += this.magnetStatus * 0.2;
+                if (this.diams[i] > 6 * this.radius) this.diams[i] = this.radius * 2;
+                if (this.diams[i] < 2 * this.radius) this.diams[i] = 6 * this.radius;
+            }
+        }
+
         super.draw();
     }
 
@@ -30,6 +51,27 @@ export default class Seeker extends GameObject {
         this.target = v;
     }
 
+    influence(goal) {
+        if (this.magnetStatus !== 0 && !this.disabled) {
+            let accVec = this.subVector(goal.pos, this.pos);
+            accVec = this.boundBy(accVec,-this.p5.width,this.p5.width,-this.p5.height,this.p5.height,2)
+            let d = this.dist(goal.pos, this.pos)-(this.radius+goal.radius);
+            accVec.mult(this.magnetStatus*goal.acceleration/(d*d));
+            goal.acc.add(accVec);
+        }
+    }
+
+    setMagnetActive(){
+        this.magnetStatus = this.pushStrength;
+    }
+
+    setMagnetDisabled(){
+        this.magnetStatus = 0;
+    }
+
+    setMagnetRepulsive() {
+        this.magnetStatus = this.pullStrength;
+    }
 
     setAcc() {
         this.acc = this.subVector(this.target, this.pos);
@@ -38,7 +80,6 @@ export default class Seeker extends GameObject {
     }
 
     seekerCollide(seeker2) {
-        console.log('player')
         if (seeker2 === this) return false;
         if (this.dist(this.pos, seeker2.pos) <= this.radius + seeker2.getRadius(this)) {
             if (this.magnetStatus === seeker2.magnetStatus) {
@@ -66,7 +107,7 @@ export default class Seeker extends GameObject {
                     seeker2.disabledTime = 90;
                 }
             }
-            //super.collide(seeker2);
+            super.collide(seeker2);
         }
     }
 }
