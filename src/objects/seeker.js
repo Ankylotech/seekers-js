@@ -7,7 +7,7 @@ export default class Seeker extends GameObject {
         this.color = this.player.color;
         this.pos = p5.createVector(Math.random() * this.p5.width / 2 + this.p5.width/2 * this.player.side,
             Math.random() * this.p5.height);
-        this.maxSpeed = 5;
+        this.maxSpeed = 5/4.0;
 
         this.target = p5.createVector(this.pos.x, this.pos.y);
 
@@ -33,6 +33,10 @@ export default class Seeker extends GameObject {
         if(this.disabledTime === 0) this.disabled = false;
         this.setAcc();
         if(this.disabled) this.acc.setMag(0);
+
+        super.update();
+
+        this.p5.noFill();
         this.p5.stroke(this.color.red,this.color.green,this.color.blue);
         this.p5.strokeWeight(0.5);
         if (this.magnetStatus !== 0 && !this.disabled) {
@@ -43,6 +47,7 @@ export default class Seeker extends GameObject {
                 if (this.diams[i] < 2 * this.radius) this.diams[i] = 6 * this.radius;
             }
         }
+
 
         super.draw();
     }
@@ -62,7 +67,7 @@ export default class Seeker extends GameObject {
     }
 
     setMagnetActive(){
-        this.magnetStatus = this.pushStrength;
+        this.magnetStatus = this.pullStrength;
     }
 
     setMagnetDisabled(){
@@ -70,7 +75,7 @@ export default class Seeker extends GameObject {
     }
 
     setMagnetRepulsive() {
-        this.magnetStatus = this.pullStrength;
+        this.magnetStatus = this.pushStrength;
     }
 
     setAcc() {

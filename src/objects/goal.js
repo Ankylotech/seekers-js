@@ -5,7 +5,7 @@ export default class Goal extends GameObject {
         super(p5);
         this.reset();
         this.radius = 3;
-        this.maxSpeed = 10;
+        this.maxSpeed = 2.5;
         this.mass = 1;
         this.color = {red: 225, green: 0, blue: 125};
     }
@@ -18,6 +18,8 @@ export default class Goal extends GameObject {
     }
 
     update() {
+        super.update();
         super.draw();
+        this.acc.setMag(0);
     }
 }

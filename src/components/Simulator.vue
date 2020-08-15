@@ -9,6 +9,7 @@ import Player from '../players/player.js'
 import {EventBus} from "@/components/event-bus";
 import Goal from "../objects/goal.js"
 import P5 from "p5";
+import Splash from "@/objects/splash";
 
 export default {
   name: "Simulator",
@@ -29,11 +30,13 @@ export default {
       let maxSeekers = 5;
       let player1Score = 0;
       let player2Score = 0;
-      let countdown = 1000;
+      let countdown = 10000;
       let gameWon = false;
+      let speedup = 1;
+      let splashes = [];
 
       p5.setup = function () {
-        //p5.setFrameRate(2);
+        //p5.setFrameRate(8);
         let canvas = p5.createCanvas(1000, 500);
         canvas.parent("p5Canvas");
         for (let i = 0; i < goalNum; i++) {
@@ -52,43 +55,59 @@ export default {
         }
         if (!gameWon) {
           p5.background(0);
-          player1.draw();
-          player2.draw();
-
-
-          goals.forEach((goal) => {
-            goal.update();
-            if(player1.camp.withinBorders(goal.pos)){
-              goal.timer--;
-              if(goal.timer === 0){
-                player1Score++;
-                player1.score++;
-              }
-            }else if(player2.camp.withinBorders(goal.pos)){
-              goal.timer--;
-              if(goal.timer === 0){
-                player2Score++;
-                player2.score++;
-              }
+          for(let i = 0; i < splashes.length; i++){
+            splashes[i].update();
+            if(splashes[i].fertig){
+              splashes.shift();
+              i--;
+            }else {
+              break;
             }
-          })
-          goals.forEach((goal) => {
-            goals.forEach((goal2) => {
-              goal.collide(goal2);
+          }
+          for (let i = 0; i < speedup; i++) {
+            player1.draw();
+            player2.draw();
+
+
+            goals.forEach((goal) => {
+              goal.update();
+              if (player1.camp.withinBorders(goal.pos)) {
+                goal.timer--;
+                if (goal.timer === 0) {
+                  splashes.push(new Splash(goal.pos,3,player1.color,10,2,25,p5));
+                  goal.reset();
+                  player1Score++;
+                  player1.score++;
+                }
+              } else if (player2.camp.withinBorders(goal.pos)) {
+                goal.timer--;
+                if (goal.timer === 0) {
+                  splashes.push(new Splash(goal.pos,3,player2.color,10,2,25,p5));
+                  goal.reset();
+                  player2Score++;
+                  player2.score++;
+                }
+              }
             })
-          })
+            goals.forEach((goal) => {
+              goals.forEach((goal2) => {
+                goal.collide(goal2);
+              })
+            })
+          }
         } else {
           p5.textAlign(p5.CENTER, p5.CENTER);
           let winner = player1.name;
-          p5.stroke(player1.color.red,player1.color.green,player1.color.blue);
-          p5.fill(player1.color.red,player1.color.green,player1.color.blue);
+          p5.stroke(player1.color.red, player1.color.green, player1.color.blue);
+          p5.fill(player1.color.red, player1.color.green, player1.color.blue);
           if (player2Score > player1Score) {
             winner = player2.name;
-            p5.stroke(player2.color.red,player2.color.green,player2.color.blue);
-            p5.fill(player2.color.red,player2.color.green,player2.color.blue);
+            p5.stroke(player2.color.red, player2.color.green, player2.color.blue);
+            p5.fill(player2.color.red, player2.color.green, player2.color.blue);
           }
-          p5.strokeWeight(2);
+          p5.strokeWeight(0.1);
           p5.textSize(40);
+          p5.stroke(255);
           let text = winner + ' has won this match!'
           if (player1Score === player2Score) text = 'it is a tie'
 
