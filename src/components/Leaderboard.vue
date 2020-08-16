@@ -1,12 +1,12 @@
 <template>
   <v-data-table
-    :headers="headers"
-    :items="values"
-    :sort-by="['points','matches','difference','goals','conceded']"
-    :sort-desc="[true,true,true,true,false]"
-    class="elevation-1"
-    :items-per-page="values.length"
-></v-data-table>
+      :headers="headers"
+      :items="values"
+      :sort-by="['points','matches','difference','goals','conceded']"
+      :sort-desc="[true,true,true,true,false]"
+      class="elevation-1"
+      :items-per-page="values.length"
+  ></v-data-table>
 </template>
 
 <script>
@@ -35,10 +35,10 @@ export default {
     }
   },
   mounted() {
-    EventBus.$on('newLeaderboard',this.getLeaders)
+    EventBus.$on('newLeaderboard', this.getLeaders)
   },
   methods: {
-    getLeaders(leaderboard){
+    getLeaders(leaderboard) {
       this.values = leaderboard;
     }
   }

@@ -56,7 +56,7 @@ export default class GameObject {
 
     dist(v1, v2) {
         let connect = this.subVector(v1, v2);
-        connect = this.boundBy(connect,-this.p5.width,this.p5.width,-this.p5.height,this.p5.height,2);
+        connect = this.boundBy(connect, -this.p5.width, this.p5.width, -this.p5.height, this.p5.height, 2);
         return Math.sqrt(connect.x * connect.x + connect.y * connect.y);
     }
 
@@ -86,7 +86,7 @@ export default class GameObject {
         if (overlap > 0) {
             let zwischen = this.subVector(this.pos, gameObject.pos);
             if (zwischen.mag() === 0) return;
-            zwischen.setMag(overlap/2);
+            zwischen.setMag(overlap / 2);
             this.pos.add(zwischen);
             gameObject.pos.add(zwischen.mult(-1));
 

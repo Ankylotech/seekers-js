@@ -37,9 +37,10 @@ export default {
       let countdown = 10000;
       let initialCountdown = countdown;
       let gameWon = false;
-      let speedUp = 1000;
+      let speedUp = 5;
       let splashes = [];
       let leaderboard = [];
+      let games = 0;
 
       p5.setup = function () {
         p5.setFrameRate(60);
@@ -70,165 +71,210 @@ export default {
         matching[0].enemy = matching[1];
         matching[1].enemy = matching[0];
         matching[1].setSide(1);
-
       }
 
       p5.draw = function () {
-        if (countdown > 0) countdown -= speedUp;
-        else if (scores[0] !== scores[1] || scores[0] === 0) {
-          countdown = 100;
-          let winner = matching[0].name;
-          if (scores[1] > scores[0]) {
-            winner = matching[1].name;
-          }
-          if (scores[0] === scores[1]) winner = 'none'
-          leaderboard.forEach(entry => {
-            if (entry.name === matching[0].name || entry.name === matching[1].name) {
-              entry.matches++;
-              if(entry.name === matching[0].name){
-                entry.goals += scores[0];
-                entry.conceded += scores[1];
-                entry.difference = entry.goals-entry.conceded;
-              }else {
-                entry.goals += scores[1];
-                entry.conceded += scores[0];
-                entry.difference = entry.goals-entry.conceded;
-              }
-              if (winner === 'none') {
-                entry.draw++;
-                entry.points++;
-              } else if (winner === matching[0].name) {
-                if (entry.name === matching[0].name) {
-                  entry.win++;
-                  entry.points+= 3;
-                } else {
-                  entry.lost++;
-                }
-              } else {
-                if (entry.name === matching[1].name) {
-                  entry.win++;
-                  entry.points+= 3;
-                } else {
-                  entry.lost++;
-                }
-              }
-            }
-          })
-          EventBus.$emit('newLeaderboard', leaderboard);
-          gameWon = true;
-        }
-        if (!gameWon) {
+        if (games === players.length * (players.length - 1)) {
           p5.background(0);
-          for (let i = 0; i < speedUp; i++) {
-            matching[0].logic();
-            matching[1].logic();
-
-            goals.forEach((goal) => {
-              goal.update();
-              if (matching[0].camp.withinBorders(goal.pos)) {
-                goal.timer--;
-                if (goal.timer === 0) {
-                  splashes.push(new Splash(goal.pos, 3, matching[0].color, 10, 2, 25, p5));
-                  goal.reset();
-                  scores[0]++;
-                  matching[0].score++;
-                }
-              } else if (matching[1].camp.withinBorders(goal.pos)) {
-                goal.timer--;
-                if (goal.timer === 0) {
-                  splashes.push(new Splash(goal.pos, 3, matching[1].color, 10, 2, 25, p5));
-                  goal.reset();
-                  scores[1]++;
-                  matching[1].score++;
-                }
-              }
+          let sorters = ['points', 'win', 'difference', 'goals'];
+          for (let j = 0; j < sorters.length; j++) {
+            leaderboard.sort((a, b) => {
+              return b[sorters[j]] - a[sorters[j]];
             })
-            goals.forEach((goal) => {
-              goals.forEach((goal2) => {
-                goal.collide(goal2);
-              })
-            })
-          }
-          matching[0].draw();
-          matching[1].draw();
-          goals.forEach(goal => {
-            goal.draw();
-          })
-          for (let i = 0; i < splashes.length; i++) {
-            splashes[i].update();
-            if (splashes[i].fertig) {
-              splashes.shift();
-              i--;
-            } else {
-              break;
-            }
-          }
-          p5.textAlign(p5.RIGHT, p5.TOP);
-          let text = Math.floor(countdown / 60.0);
-          if (countdown === 0) text = "GOLDEN GOAL"
-          p5.fill(255);
-          p5.stroke(255);
-
-          p5.text(text, p5.width - 20, 20);
-        } else {
-          if (countdown > 0) {
-            p5.fill(125, 125, 125, 1);
-            p5.rect(0, 0, p5.width * 4, p5.height * 4);
-            p5.textAlign(p5.CENTER, p5.CENTER);
-            let winner = matching[0].name;
-            p5.stroke(matching[0].color.red, matching[0].color.green, matching[0].color.blue);
-            p5.fill(matching[0].color.red, matching[0].color.green, matching[0].color.blue);
-            if (scores[1] > scores[0]) {
-              winner = matching[1].name;
-              p5.stroke(matching[1].color.red, matching[1].color.green, matching[1].color.blue);
-              p5.fill(matching[1].color.red, matching[1].color.green, matching[1].color.blue);
-            }
-            p5.strokeWeight(0.1);
-            p5.textSize(40);
-            let text = winner + ' has won this match!'
-            if (scores[0] === scores[1]) text = 'it is a tie'
-
-            p5.text(text, p5.width / 2, p5.height / 2);
-          } else {
-            countdown = initialCountdown;
-            gameWon = false;
-            leaderboard.sort(function (a,b) {
-              return a.matches - b.matches;
-            });
-            leaderboard.reverse();
-            let sliceInd = 0;
-            for(let i = 0; i < leaderboard.length; i++){
-              if(leaderboard[i].matches < leaderboard[0].matches){
-                sliceInd = i;
+            for (let i = 0; i < leaderboard.length; i++) {
+              if (leaderboard[i][sorters[j]] !== leaderboard[0][sorters[j]]) {
+                leaderboard = leaderboard.slice(0, i);
                 break;
               }
             }
-            let remaining = leaderboard;
-            if(sliceInd > 0) {
-              remaining = leaderboard.slice(sliceInd,leaderboard.length);
+          }
+          let winner = leaderboard[0];
+          p5.textAlign(p5.CENTER, p5.CENTER);
+          p5.stroke(255);
+          p5.fill(255);
+          p5.textSize(40);
+          p5.text(winner.name + ' hat das Turnier Gewonnen! Gratuliere!', p5.width / 2, p5.height / 2);
+        } else {
+          if (countdown > 0) countdown -= speedUp;
+          else if (scores[0] !== scores[1] || scores[0] === 0) {
+            countdown = 100;
+            let winner = matching[0].name;
+            if (scores[1] > scores[0]) {
+              winner = matching[1].name;
             }
-            if(remaining.length <= 1) {
-              leaderboard[sliceInd].win++;
-              leaderboard[sliceInd].points += 3;
-              leaderboard[sliceInd].matches++;
-              EventBus.$emit('newLeaderboard', leaderboard);
-            }else {
-              remaining.sort(function (a, b) {
-                return b.points - a.points;
-              });
-              players.forEach(player => {
-                if (player.name === remaining[0].name) {
-                  matching[0] = player;
-                }else if(player.name === remaining[1].name){
-                  matching[1] = player;
+            if (scores[0] === scores[1]) winner = 'none'
+            leaderboard.forEach(entry => {
+              if (entry.name === matching[0].name || entry.name === matching[1].name) {
+                entry.matches++;
+                if (entry.name === matching[0].name) {
+                  entry.goals += scores[0];
+                  entry.conceded += scores[1];
+                  entry.difference = entry.goals - entry.conceded;
+                } else {
+                  entry.goals += scores[1];
+                  entry.conceded += scores[0];
+                  entry.difference = entry.goals - entry.conceded;
+                }
+                if (winner === 'none') {
+                  entry.draw++;
+                  entry.points++;
+                } else if (winner === matching[0].name) {
+                  if (entry.name === matching[0].name) {
+                    entry.win++;
+                    entry.points += 3;
+                  } else {
+                    entry.lost++;
+                  }
+                } else {
+                  if (entry.name === matching[1].name) {
+                    entry.win++;
+                    entry.points += 3;
+                  } else {
+                    entry.lost++;
+                  }
+                }
+              }
+            })
+            EventBus.$emit('newLeaderboard', leaderboard);
+            gameWon = true;
+          }
+          if (!gameWon) {
+            p5.background(0);
+            for (let i = 0; i < speedUp; i++) {
+              matching[0].logic();
+              matching[1].logic();
+
+              goals.forEach((goal) => {
+                goal.update();
+                if (matching[0].camp.withinBorders(goal.pos)) {
+                  goal.timer--;
+                  if (goal.timer === 0) {
+                    splashes.push(new Splash(goal.pos, 3, matching[0].color, 10, 2, 25, p5));
+                    goal.reset();
+                    scores[0]++;
+                    matching[0].score++;
+                  }
+                } else if (matching[1].camp.withinBorders(goal.pos)) {
+                  goal.timer--;
+                  if (goal.timer === 0) {
+                    splashes.push(new Splash(goal.pos, 3, matching[1].color, 10, 2, 25, p5));
+                    goal.reset();
+                    scores[1]++;
+                    matching[1].score++;
+                  }
                 }
               })
-              scores[0] = 0;
-              scores[1] = 1;
-              matching[0].enemy = matching[1];
-              matching[1].enemy = matching[0];
-              matching[1].setSide(1);
-              matching[0].setSide(0);
+              goals.forEach((goal) => {
+                goals.forEach((goal2) => {
+                  goal.collide(goal2);
+                })
+              })
+              for (let i = 0; i < splashes.length; i++) {
+                splashes[i].update();
+                if (splashes[i].fertig) {
+                  splashes.shift();
+                  i--;
+                } else {
+                  break;
+                }
+              }
+            }
+            matching[0].draw();
+            matching[1].draw();
+            goals.forEach(goal => {
+              goal.draw();
+            })
+            p5.textAlign(p5.RIGHT, p5.TOP);
+            let text = Math.floor(countdown / 60.0);
+            p5.fill(255);
+            p5.stroke(255);
+            if (countdown === 0) {
+              text = "GOLDEN GOAL"
+              p5.fill(255, 0, 0);
+              p5.stroke(255, 0, 0);
+            }
+
+            p5.text(text, p5.width - 20, 20);
+          } else {
+            if (countdown > 0) {
+              p5.fill(125, 125, 125, 1);
+              p5.rect(0, 0, p5.width * 4, p5.height * 4);
+              p5.textAlign(p5.CENTER, p5.CENTER);
+              let winner = matching[0].name;
+              p5.stroke(matching[0].color.red, matching[0].color.green, matching[0].color.blue);
+              p5.fill(matching[0].color.red, matching[0].color.green, matching[0].color.blue);
+              if (scores[1] > scores[0]) {
+                winner = matching[1].name;
+                p5.stroke(matching[1].color.red, matching[1].color.green, matching[1].color.blue);
+                p5.fill(matching[1].color.red, matching[1].color.green, matching[1].color.blue);
+              }
+              p5.strokeWeight(0.1);
+              p5.textSize(40);
+              let text = winner + ' has won this match!'
+              if (scores[0] === scores[1]) text = 'it is a tie'
+
+              p5.text(text, p5.width / 2, p5.height / 2);
+            } else {
+              countdown = initialCountdown;
+              gameWon = false;
+              leaderboard.sort(function (a, b) {
+                return a.matches - b.matches;
+              });
+              leaderboard.reverse();
+              let sliceInd = 0;
+              for (let i = 0; i < leaderboard.length; i++) {
+                if (leaderboard[i].matches < leaderboard[0].matches) {
+                  sliceInd = i;
+                  break;
+                }
+              }
+              let remaining = leaderboard;
+              if (sliceInd > 0) {
+                remaining = leaderboard.slice(sliceInd, leaderboard.length);
+              }
+              if (remaining.length <= 1) {
+                leaderboard[sliceInd].win++;
+                leaderboard[sliceInd].points += 3;
+                leaderboard[sliceInd].matches++;
+                EventBus.$emit('newLeaderboard', leaderboard);
+                leaderboard.sort(function (a, b) {
+                  return b.points - a.points;
+                });
+                console.log(leaderboard);
+                players.forEach(player => {
+                  if (player.name === leaderboard[0].name) {
+                    matching[0] = player;
+                  } else if (player.name === leaderboard[1].name) {
+                    matching[1] = player;
+                  }
+                })
+                scores[0] = 0;
+                scores[1] = 0;
+                matching[0].enemy = matching[1];
+                matching[1].enemy = matching[0];
+                matching[1].setSide(1);
+                matching[0].setSide(0);
+                games++;
+              } else {
+                remaining.sort(function (a, b) {
+                  return b.points - a.points;
+                });
+                console.log(remaining);
+                players.forEach(player => {
+                  if (player.name === remaining[0].name) {
+                    matching[0] = player;
+                  } else if (player.name === remaining[1].name) {
+                    matching[1] = player;
+                  }
+                })
+                scores[0] = 0;
+                scores[1] = 0;
+                matching[0].enemy = matching[1];
+                matching[1].enemy = matching[0];
+                matching[1].setSide(1);
+                matching[0].setSide(0);
+                games++;
+              }
             }
           }
         }

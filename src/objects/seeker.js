@@ -28,7 +28,8 @@ export default class Seeker extends GameObject {
 
     }
 
-    update() {if (this.disabledTime > 0) this.disabledTime--;
+    update() {
+        if (this.disabledTime > 0) this.disabledTime--;
         if (this.disabledTime === 0) this.disabled = false;
         this.setAcc();
         if (this.disabled) this.acc.setMag(0);

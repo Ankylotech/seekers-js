@@ -24,7 +24,7 @@ export default class Player {
         this.camp = new Camp(this, this.p5);
     }
 
-    setSide(side){
+    setSide(side) {
         this.reset(side);
     }
 
