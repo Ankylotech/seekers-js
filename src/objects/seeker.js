@@ -5,9 +5,9 @@ export default class Seeker extends GameObject {
         super(p5);
         this.player = player;
         this.color = this.player.color;
-        this.pos = p5.createVector(Math.random() * this.p5.width / 2 + this.p5.width/2 * this.player.side,
+        this.pos = p5.createVector(Math.random() * this.p5.width / 2 + this.p5.width / 2 * this.player.side,
             Math.random() * this.p5.height);
-        this.maxSpeed = 5/4.0;
+        this.maxSpeed = 5 / 4.0;
 
         this.target = p5.createVector(this.pos.x, this.pos.y);
 
@@ -19,8 +19,8 @@ export default class Seeker extends GameObject {
         this.mass = 3;
         this.diams = []
 
-        for(let i = 0; i < 2; i++){
-            this.diams.push(this.radius*2 +  4*i*this.radius/2);
+        for (let i = 0; i < 2; i++) {
+            this.diams.push(this.radius * 2 + 4 * i * this.radius / 2);
         }
 
         this.disabled = false;
@@ -29,15 +29,15 @@ export default class Seeker extends GameObject {
     }
 
     draw() {
-        if(this.disabledTime > 0) this.disabledTime--;
-        if(this.disabledTime === 0) this.disabled = false;
+        if (this.disabledTime > 0) this.disabledTime--;
+        if (this.disabledTime === 0) this.disabled = false;
         this.setAcc();
-        if(this.disabled) this.acc.setMag(0);
+        if (this.disabled) this.acc.setMag(0);
 
         super.update();
 
         this.p5.noFill();
-        this.p5.stroke(this.color.red,this.color.green,this.color.blue);
+        this.p5.stroke(this.color.red, this.color.green, this.color.blue);
         this.p5.strokeWeight(0.5);
         if (this.magnetStatus !== 0 && !this.disabled) {
             for (let i = 0; i < this.diams.length; i++) {
@@ -59,18 +59,18 @@ export default class Seeker extends GameObject {
     influence(goal) {
         if (this.magnetStatus !== 0 && !this.disabled) {
             let accVec = this.subVector(goal.pos, this.pos);
-            accVec = this.boundBy(accVec,-this.p5.width,this.p5.width,-this.p5.height,this.p5.height,2)
-            let d = this.dist(goal.pos, this.pos)-(this.radius+goal.radius);
-            accVec.mult(this.magnetStatus*goal.acceleration/(d*d));
+            accVec = this.boundBy(accVec, -this.p5.width, this.p5.width, -this.p5.height, this.p5.height, 2)
+            let d = this.dist(goal.pos, this.pos) - (this.radius + goal.radius);
+            accVec.mult(this.magnetStatus * goal.acceleration / (d * d));
             goal.acc.add(accVec);
         }
     }
 
-    setMagnetActive(){
+    setMagnetActive() {
         this.magnetStatus = this.pullStrength;
     }
 
-    setMagnetDisabled(){
+    setMagnetDisabled() {
         this.magnetStatus = 0;
     }
 

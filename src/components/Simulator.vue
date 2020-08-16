@@ -32,7 +32,7 @@ export default {
       let player2Score = 0;
       let countdown = 10000;
       let gameWon = false;
-      let speedup = 1;
+      let speedUp = 1;
       let splashes = [];
 
       p5.setup = function () {
@@ -55,16 +55,16 @@ export default {
         }
         if (!gameWon) {
           p5.background(0);
-          for(let i = 0; i < splashes.length; i++){
+          for (let i = 0; i < splashes.length; i++) {
             splashes[i].update();
-            if(splashes[i].fertig){
+            if (splashes[i].fertig) {
               splashes.shift();
               i--;
-            }else {
+            } else {
               break;
             }
           }
-          for (let i = 0; i < speedup; i++) {
+          for (let i = 0; i < speedUp; i++) {
             player1.draw();
             player2.draw();
 
@@ -74,7 +74,7 @@ export default {
               if (player1.camp.withinBorders(goal.pos)) {
                 goal.timer--;
                 if (goal.timer === 0) {
-                  splashes.push(new Splash(goal.pos,3,player1.color,10,2,25,p5));
+                  splashes.push(new Splash(goal.pos, 3, player1.color, 10, 2, 25, p5));
                   goal.reset();
                   player1Score++;
                   player1.score++;
@@ -82,7 +82,7 @@ export default {
               } else if (player2.camp.withinBorders(goal.pos)) {
                 goal.timer--;
                 if (goal.timer === 0) {
-                  splashes.push(new Splash(goal.pos,3,player2.color,10,2,25,p5));
+                  splashes.push(new Splash(goal.pos, 3, player2.color, 10, 2, 25, p5));
                   goal.reset();
                   player2Score++;
                   player2.score++;
@@ -107,7 +107,6 @@ export default {
           }
           p5.strokeWeight(0.1);
           p5.textSize(40);
-          p5.stroke(255);
           let text = winner + ' has won this match!'
           if (player1Score === player2Score) text = 'it is a tie'
 

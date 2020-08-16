@@ -14,7 +14,7 @@ export default class Goal extends GameObject {
         this.pos = this.p5.createVector(Math.random() * this.p5.width, Math.random() * this.p5.height);
         this.vel = this.p5.createVector(0, 0);
         this.acc = this.p5.createVector(0, 0);
-        this.timer = 20;
+        this.timer = 40;
     }
 
     update() {
