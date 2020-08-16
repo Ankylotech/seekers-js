@@ -19,7 +19,10 @@ export default class Goal extends GameObject {
 
     update() {
         super.update();
-        super.draw();
         this.acc.setMag(0);
+    }
+
+    draw() {
+        super.draw();
     }
 }

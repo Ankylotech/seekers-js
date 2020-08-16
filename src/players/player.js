@@ -7,17 +7,25 @@ export default class Player {
         this.player = require('../bots/' + file.name);
         this.name = file.name.substring(0, file.name.length - 3);
         this.goals = goals;
-        this.seekers = [];
         this.max = max;
         this.p5 = p5;
-        this.side = side;
         let r = Math.random() * 255;
         let g = Math.random() * 255;
-        let b = Math.random() * 255
+        let b = Math.random() * 255;
         this.color = {red: r, green: g, blue: b};
+        this.reset(side)
+    }
+
+    reset(side) {
+        this.seekers = [];
+        this.side = side;
         this.player.create(this);
         this.score = 0;
-        this.camp = new Camp(this, p5);
+        this.camp = new Camp(this, this.p5);
+    }
+
+    setSide(side){
+        this.reset(side);
     }
 
     draw() {
@@ -29,7 +37,14 @@ export default class Player {
         this.p5.text(this.name + ' score: ' + this.score, 10, 10 + this.side * 20);
         if (this.seekers.length > this.max) console.error(this.name + " has too many seekers")
         if (this.enemy.seekers.length > this.max) console.error(this.enemy.name + "'s has too many seekers")
+        this.seekers.forEach((seeker) => {
+            seeker.draw();
+        })
         this.camp.draw();
+
+    }
+
+    logic() {
         this.seekers.forEach((seeker) => {
             this.seekers.forEach(ally => {
                 seeker.seekerCollide(ally);
@@ -46,7 +61,7 @@ export default class Player {
         })
         this.player.update();
         this.seekers.forEach((seeker) => {
-            seeker.draw();
+            seeker.update();
         })
     }
 }

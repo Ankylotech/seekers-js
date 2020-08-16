@@ -28,14 +28,15 @@ export default class Seeker extends GameObject {
 
     }
 
-    draw() {
-        if (this.disabledTime > 0) this.disabledTime--;
+    update() {if (this.disabledTime > 0) this.disabledTime--;
         if (this.disabledTime === 0) this.disabled = false;
         this.setAcc();
         if (this.disabled) this.acc.setMag(0);
 
         super.update();
+    }
 
+    draw() {
         this.p5.noFill();
         this.p5.stroke(this.color.red, this.color.green, this.color.blue);
         this.p5.strokeWeight(0.5);
