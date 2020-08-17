@@ -22,6 +22,6 @@ export function update() {
     }
     for (let i = 2; i < this.player.seekers.length; i++) {
         let seeker = this.player.seekers[i];
-        seeker.shoot(this.player.enemy.seekers[i]);
+        seeker.shoot(this.player.enemy.seekers[i].pos,i/2);
     }
 }

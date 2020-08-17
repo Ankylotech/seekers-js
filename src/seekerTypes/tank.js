@@ -8,12 +8,12 @@ export default class Tank extends Seeker {
         this.radius = 4;
         this.mass = 2;
         this.disabledTimer = 120;
-        this.slowDownFactor = 1;
+        this.slowDownFactor = 1.25;
         this.rockets = [];
         this.cooldown = 100;
         this.shotCooldown = 200;
         this.maxRockets = 1;
-        this.maxTotal = 6;
+        this.magazine = 6;
         this.total = 0;
     }
 
@@ -57,11 +57,12 @@ export default class Tank extends Seeker {
         return super.seekerCollide(seeker2);
     }
 
-    shoot(target) {
-        if (this.cooldown <= 0 && this.rockets.length <= this.maxRockets && !this.disabled && this.total < this.maxTotal) {
+    shoot(target,size) {
+        if (this.cooldown <= 0 && this.rockets.length <= this.maxRockets && !this.disabled ) {
             this.cooldown = this.shotCooldown;
             this.total ++;
-            this.rockets.push(new Rocket(this.p5, this.pos, target,this.player));
+            if(this.total % this.magazine === 0) this.cooldown = 5*this.shotCooldown;
+            this.rockets.push(new Rocket(this.p5, this.pos, target,this.player,size));
         }
     }
 }

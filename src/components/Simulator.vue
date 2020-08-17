@@ -37,7 +37,7 @@ export default {
       let countdown = 7200;
       let initialCountdown = countdown;
       let gameWon = false;
-      let speedUp = 4;
+      let speedUp = 2;
       let splashes = [];
       let leaderboard = [];
       let games = 0;

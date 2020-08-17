@@ -11,11 +11,12 @@ export default class GameObject {
         this.disabled = false;
         this.pos = p5.createVector(Math.random() * p5.width, Math.random() * p5.height);
         this.slowDown = 1;
+        this.friction = 0.02;
     }
 
     update() {
         this.acc.limit(this.acceleration);
-        this.vel.mult(0.98);
+        this.vel.mult(1-this.friction);
 
         this.vel.x += this.acc.x;
         this.vel.y += this.acc.y;

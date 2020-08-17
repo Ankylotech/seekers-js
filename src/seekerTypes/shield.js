@@ -6,8 +6,9 @@ export default class Shield extends Seeker {
         this.maxSpeed = 2;
         this.radius = 4;
         this.mass = 2;
-        this.pullStrength = 0.25;
-        this.pushStrength = 1.5;
+        this.pullStrength /= 2;
+        this.pushStrength = this.pullStrength;
+        this.magnetStatus = this.pullStrength;
         this.disabledTimer = 120;
         this.slowDownFactor = 1;
         this.shieldTime = 75;
@@ -32,6 +33,10 @@ export default class Shield extends Seeker {
         }
 
         super.update();
+    }
+
+    setMagnetDisabled() {
+        this.magnetStatus = this.pullStrength;
     }
 
     draw() {
