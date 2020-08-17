@@ -243,7 +243,6 @@ export default {
                 leaderboard.sort(function (a, b) {
                   return b.points - a.points;
                 });
-                console.log(leaderboard);
                 players.forEach(player => {
                   if (player.name === leaderboard[0].name) {
                     matching[0] = player;
@@ -264,7 +263,6 @@ export default {
                 remaining.sort(function (a, b) {
                   return b.points - a.points;
                 });
-                console.log(remaining);
                 players.forEach(player => {
                   if (player.name === remaining[0].name) {
                     matching[0] = player;

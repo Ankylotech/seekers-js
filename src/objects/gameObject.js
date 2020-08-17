@@ -82,11 +82,11 @@ export default class GameObject {
     }
 
     collide(gameObject) {
-        if (gameObject === this || (this.pos.x === gameObject.pos.x && this.pos.y === gameObject.pos.y)) return;
+        if (gameObject === this || (this.pos.x === gameObject.pos.x && this.pos.y === gameObject.pos.y)) return false;
         let overlap = (this.getRadius() + gameObject.getRadius(this)) - this.dist(this.pos, gameObject.pos);
         if (overlap > 0) {
             let zwischen = this.subVector(this.pos, gameObject.pos);
-            if (zwischen.mag() === 0) return;
+            if (zwischen.mag() === 0) return false;
             zwischen.setMag(overlap / 2);
             this.pos.add(zwischen);
             gameObject.pos.add(zwischen.mult(-1));
@@ -113,6 +113,7 @@ export default class GameObject {
                 gameObject.vel.x -= collisionWeightB * xCollision;
                 gameObject.vel.y -= collisionWeightB * yCollision;
             }
+            return true;
         }
     }
 }
