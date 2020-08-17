@@ -1,5 +1,4 @@
-import Seeker from "@/objects/seeker";
-import Tank from "@/objects/shootin-tootin";
+import {Seeker,Tank} from "@/objects";
 
 export function create(player) {
     this.player = player;

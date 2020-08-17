@@ -1,5 +1,4 @@
-import Seeker from "@/objects/seeker";
-import Shield from "@/objects/Shield";
+import {Seeker,Shield} from '@/objects'
 
 export function create(player) {
     this.player = player;
