@@ -1,7 +1,7 @@
 import GameObject from "@/objects/gameObject";
 
 export default class Rocket extends GameObject {
-    constructor(p5, pos, target) {
+    constructor(p5, pos, target,player) {
         super(p5);
         this.radius = 1.5;
 
@@ -11,6 +11,7 @@ export default class Rocket extends GameObject {
         this.mass = 20;
         this.color = {red: 255, green: 0, blue: 0}
         this.off = false;
+        this.player = player;
     }
 
     setAcc() {
@@ -39,9 +40,7 @@ export default class Rocket extends GameObject {
 
     seekerCollide(seeker2) {
         if (this.collide(seeker2)) {
-            seeker2.disabled = true;
-            seeker2.magnetStatus = 0;
-            seeker2.disabledTime = seeker2.disabledTimer * 2;
+            seeker2.disable(2,this);
             return true;
         }
         return false;

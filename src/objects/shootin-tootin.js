@@ -60,7 +60,7 @@ export default class Tank extends Seeker {
     shoot(target) {
         if (this.cooldown <= 0 && this.rockets.length <= this.maxRockets && !this.disabled) {
             this.cooldown = this.shotCooldown;
-            this.rockets.push(new Rocket(this.p5, this.pos, target));
+            this.rockets.push(new Rocket(this.p5, this.pos, target,this.player));
         }
     }
 }

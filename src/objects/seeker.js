@@ -91,32 +91,26 @@ export default class Seeker extends GameObject {
         this.acc.setMag(this.acceleration);
     }
 
+    disable(factor){
+        this.disabled = true;
+        this.magnetStatus = 0;
+        this.disabledTime = this.disabledTimer*factor;
+    }
+
     seekerCollide(seeker2) {
         if (seeker2 === this) return false;
         if (this.dist(this.pos, seeker2.pos) <= this.radius + seeker2.getRadius(this)) {
             if (this.magnetStatus === seeker2.magnetStatus) {
-                this.disabled = true;
-                seeker2.disabled = true;
-                this.magnetStatus = 0;
-                seeker2.magnetStatus = 0;
-                this.disabledTime = this.disabledTimer;
-                seeker2.disabledTime = seeker2.disabledTimer;
+                this.disable(1,seeker2);
+                seeker2.disable(1,this);
             } else {
                 if (this.magnetStatus === 0) {
-                    seeker2.disabled = true;
-                    seeker2.magnetStatus = 0;
-                    seeker2.disabledTime = seeker2.disabledTimer*2;
+                    seeker2.disable(2,this);
                 } else if (seeker2.magnetStatus === 0) {
-                    this.disabled = true;
-                    this.magnetStatus = 0;
-                    this.disabledTime = this.disabledTimer*2;
+                    this.disable(2,seeker2);
                 } else {
-                    this.disabled = true;
-                    seeker2.disabled = true;
-                    this.magnetStatus = 0;
-                    seeker2.magnetStatus = 0;
-                    this.disabledTime = this.disabledTimer*1.5;
-                    seeker2.disabledTime = seeker2.disabledTimer*1.5;
+                    this.disable(1.5,seeker2);
+                    seeker2.disable(1.5,this);
                 }
             }
             super.collide(seeker2);
