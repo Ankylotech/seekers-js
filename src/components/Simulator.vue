@@ -34,10 +34,10 @@ export default {
       let goalNum = 7;
       let maxSeekers = 5;
       let scores = [];
-      let countdown = 3600;
+      let countdown = 7200;
       let initialCountdown = countdown;
       let gameWon = false;
-      let speedUp = 1;
+      let speedUp = 4;
       let splashes = [];
       let leaderboard = [];
       let games = 0;
@@ -187,7 +187,7 @@ export default {
               goal.draw();
             })
             p5.textAlign(p5.RIGHT, p5.TOP);
-            let text = Math.floor(countdown / 60.0);
+            let text = Math.floor(countdown / (60.0*speedUp));
             p5.fill(255);
             p5.stroke(255);
             if (countdown === 0) {

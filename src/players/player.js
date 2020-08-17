@@ -12,6 +12,7 @@ export default class Player {
         let r = Math.random() * 205 + 50;
         let g = Math.random() * 205 + 50;
         let b = Math.random() * 205 + 50;
+        this.rockets = [];
         this.color = {red: r, green: g, blue: b};
         this.reset(side);
     }
@@ -62,6 +63,18 @@ export default class Player {
         this.player.update();
         this.seekers.forEach((seeker) => {
             seeker.update();
+        })
+        this.rockets = [];
+
+        this.seekers.forEach((seeker) => {
+            if(seeker.rockets !== undefined){
+                this.rockets.push.apply(this.rockets,seeker.rockets);
+            }
+        })
+        this.enemy.seekers.forEach((seeker) => {
+            if(seeker.rockets !== undefined){
+                this.rockets.push.apply(this.rockets,seeker.rockets);
+            }
         })
     }
 }
