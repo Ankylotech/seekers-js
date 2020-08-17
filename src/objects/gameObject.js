@@ -9,7 +9,8 @@ export default class GameObject {
         this.radius = 4;
         this.acceleration = 0.2;
         this.disabled = false;
-        this.pos = p5.createVector(Math.random() * p5.width, Math.random() * p5.height)
+        this.pos = p5.createVector(Math.random() * p5.width, Math.random() * p5.height);
+        this.slowDown = 1;
     }
 
     update() {
@@ -19,7 +20,7 @@ export default class GameObject {
         this.vel.x += this.acc.x;
         this.vel.y += this.acc.y;
 
-        if (this.vel.mag() > this.maxSpeed) this.vel.setMag(this.maxSpeed);
+        if (this.vel.mag() > this.maxSpeed/this.slowDown) this.vel.setMag(this.maxSpeed/this.slowDown);
 
         this.pos.x += this.vel.x;
         this.pos.y += this.vel.y;

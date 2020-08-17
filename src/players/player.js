@@ -9,9 +9,9 @@ export default class Player {
         this.goals = goals;
         this.max = max;
         this.p5 = p5;
-        let r = Math.random() * 255;
-        let g = Math.random() * 255;
-        let b = Math.random() * 255;
+        let r = Math.random() * 205 + 50;
+        let g = Math.random() * 205 + 50;
+        let b = Math.random() * 205 + 50;
         this.color = {red: r, green: g, blue: b};
         this.reset(side)
     }
@@ -40,7 +40,6 @@ export default class Player {
         this.seekers.forEach((seeker) => {
             seeker.draw();
         })
-        this.camp.draw();
 
     }
 

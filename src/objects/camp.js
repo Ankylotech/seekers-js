@@ -7,7 +7,7 @@ export default class Camp {
             y: p5.height / 2
         }
         this.color = player.color;
-        this.size = 20;
+        this.size = 25;
     }
 
     draw() {

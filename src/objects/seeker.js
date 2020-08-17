@@ -7,7 +7,7 @@ export default class Seeker extends GameObject {
         this.color = this.player.color;
         this.pos = p5.createVector(Math.random() * this.p5.width / 2 + this.p5.width / 2 * this.player.side,
             Math.random() * this.p5.height);
-        this.maxSpeed = 5 / 4.0;
+        this.maxSpeed = 1.25;
 
         this.target = p5.createVector(this.pos.x, this.pos.y);
 
@@ -17,7 +17,8 @@ export default class Seeker extends GameObject {
 
         this.radius = 5;
         this.mass = 3;
-        this.diams = []
+        this.diams = [];
+        this.slowDownFactor = 3;
 
         for (let i = 0; i < 2; i++) {
             this.diams.push(this.radius * 2 + 4 * i * this.radius / 2);
@@ -25,14 +26,17 @@ export default class Seeker extends GameObject {
 
         this.disabled = false;
         this.disabledTime = 0;
-
+        this.disabledTimer = 60;
     }
 
     update() {
         if (this.disabledTime > 0) this.disabledTime--;
-        if (this.disabledTime === 0) this.disabled = false;
+        if (this.disabledTime <= 0) {
+            this.disabled = false;
+        }
         this.setAcc();
         if (this.disabled) this.acc.setMag(0);
+        if(this.disabled) this.setMagnetDisabled();
 
         super.update();
     }
@@ -49,8 +53,6 @@ export default class Seeker extends GameObject {
                 if (this.diams[i] < 2 * this.radius) this.diams[i] = 6 * this.radius;
             }
         }
-
-
         super.draw();
     }
 
@@ -70,14 +72,17 @@ export default class Seeker extends GameObject {
 
     setMagnetActive() {
         this.magnetStatus = this.pullStrength;
+        this.slowDown = this.slowDownFactor;
     }
 
     setMagnetDisabled() {
         this.magnetStatus = 0;
+        this.slowDown = 1;
     }
 
     setMagnetRepulsive() {
         this.magnetStatus = this.pushStrength;
+        this.slowDown = this.slowDownFactor;
     }
 
     setAcc() {
@@ -94,24 +99,24 @@ export default class Seeker extends GameObject {
                 seeker2.disabled = true;
                 this.magnetStatus = 0;
                 seeker2.magnetStatus = 0;
-                this.disabledTime = 60;
-                seeker2.disabledTime = 60;
+                this.disabledTime = this.disabledTimer;
+                seeker2.disabledTime = seeker2.disabledTimer;
             } else {
                 if (this.magnetStatus === 0) {
                     seeker2.disabled = true;
                     seeker2.magnetStatus = 0;
-                    seeker2.disabledTime = 120;
+                    seeker2.disabledTime = seeker2.disabledTimer*2;
                 } else if (seeker2.magnetStatus === 0) {
                     this.disabled = true;
                     this.magnetStatus = 0;
-                    this.disabledTime = 120;
+                    this.disabledTime = this.disabledTimer*2;
                 } else {
                     this.disabled = true;
                     seeker2.disabled = true;
                     this.magnetStatus = 0;
                     seeker2.magnetStatus = 0;
-                    this.disabledTime = 90;
-                    seeker2.disabledTime = 90;
+                    this.disabledTime = this.disabledTimer*1.5;
+                    seeker2.disabledTime = seeker2.disabledTimer*1.5;
                 }
             }
             super.collide(seeker2);

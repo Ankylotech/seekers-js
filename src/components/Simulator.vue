@@ -34,10 +34,10 @@ export default {
       let goalNum = 7;
       let maxSeekers = 5;
       let scores = [];
-      let countdown = 10000;
+      let countdown = 3600;
       let initialCountdown = countdown;
       let gameWon = false;
-      let speedUp = 5;
+      let speedUp = 1;
       let splashes = [];
       let leaderboard = [];
       let games = 0;
@@ -179,6 +179,8 @@ export default {
                 }
               }
             }
+            matching[0].camp.draw();
+            matching[1].camp.draw();
             matching[0].draw();
             matching[1].draw();
             goals.forEach(goal => {
@@ -217,6 +219,7 @@ export default {
             } else {
               countdown = initialCountdown;
               gameWon = false;
+              games++;
               leaderboard.sort(function (a, b) {
                 return a.matches - b.matches;
               });
@@ -252,9 +255,11 @@ export default {
                 scores[1] = 0;
                 matching[0].enemy = matching[1];
                 matching[1].enemy = matching[0];
+                goals.forEach(goal => {
+                  goal.reset();
+                })
                 matching[1].setSide(1);
                 matching[0].setSide(0);
-                games++;
               } else {
                 remaining.sort(function (a, b) {
                   return b.points - a.points;
@@ -271,9 +276,11 @@ export default {
                 scores[1] = 0;
                 matching[0].enemy = matching[1];
                 matching[1].enemy = matching[0];
+                goals.forEach(goal => {
+                  goal.reset();
+                })
                 matching[1].setSide(1);
                 matching[0].setSide(0);
-                games++;
               }
             }
           }
