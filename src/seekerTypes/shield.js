@@ -10,11 +10,11 @@ export default class Shield extends Seeker {
         this.pushStrength = 1.5;
         this.disabledTimer = 120;
         this.slowDownFactor = 1;
-        this.shieldTime = 200;
-        this.maxShieldTime = 400;
+        this.shieldTime = 75;
+        this.maxShieldTime = 150;
         this.maxShieldRadius = 16;
         this.shieldRadius = 0;
-        this.recovery = 3;
+        this.recovery = 1;
     }
 
     update() {
