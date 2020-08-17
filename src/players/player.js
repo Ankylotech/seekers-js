@@ -13,7 +13,7 @@ export default class Player {
         let g = Math.random() * 205 + 50;
         let b = Math.random() * 205 + 50;
         this.color = {red: r, green: g, blue: b};
-        this.reset(side)
+        this.reset(side);
     }
 
     reset(side) {
@@ -27,6 +27,7 @@ export default class Player {
     setSide(side) {
         this.reset(side);
     }
+
 
     draw() {
         this.p5.fill(this.color.red, this.color.green, this.color.blue);

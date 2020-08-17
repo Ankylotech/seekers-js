@@ -6,27 +6,29 @@ export default class Shield extends Seeker {
         this.maxSpeed = 2;
         this.radius = 4;
         this.mass = 2;
-        this.pullStrength = 0;
-        this.pushStrength = 0;
+        this.pullStrength = 0.25;
+        this.pushStrength = 1.5;
         this.disabledTimer = 120;
         this.slowDownFactor = 1;
         this.shieldTime = 200;
         this.maxShieldTime = 400;
         this.maxShieldRadius = 16;
         this.shieldRadius = 0;
-        this.recovery = 2;
+        this.recovery = 3;
     }
 
     update() {
-        this.shieldTime += this.recovery - Math.sqrt(this.shieldRadius);
+        if (this.shieldTime <= 0) {
+            this.shieldRadius = 0;
+            this.magnetStatus = 0;
+        }
+        this.shieldTime += this.recovery - Math.sqrt(this.shieldRadius) - this.magnetStatus;
         if (this.shieldTime <= 0) {
             this.shieldTime = -20;
             this.shieldRadius = 0;
-        } else {
-
-            if (this.shieldTime >= this.maxShieldTime) {
-                this.shieldTime = this.maxShieldTime;
-            }
+            this.magnetStatus = 0;
+        } else if (this.shieldTime >= this.maxShieldTime) {
+            this.shieldTime = this.maxShieldTime;
         }
 
         super.update();

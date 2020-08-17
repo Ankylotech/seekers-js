@@ -1,20 +1,20 @@
 import Seeker from "@/objects/seeker";
-import Rocket from "@/objects/Rocket";
+import Rocket from "@/objects/rocket";
 
 export default class Tank extends Seeker {
     constructor(player, p5) {
         super(player, p5);
-        this.maxSpeed = 1;
+        this.maxSpeed = 0.5;
         this.radius = 4;
         this.mass = 2;
-        this.pullStrength = 0;
-        this.pushStrength = 0;
         this.disabledTimer = 120;
         this.slowDownFactor = 1;
         this.rockets = [];
         this.cooldown = 100;
         this.shotCooldown = 200;
-        this.maxRockets = 5;
+        this.maxRockets = 1;
+        this.maxTotal = 6;
+        this.total = 0;
     }
 
     update() {
@@ -58,8 +58,9 @@ export default class Tank extends Seeker {
     }
 
     shoot(target) {
-        if (this.cooldown <= 0 && this.rockets.length <= this.maxRockets && !this.disabled) {
+        if (this.cooldown <= 0 && this.rockets.length <= this.maxRockets && !this.disabled && this.total < this.maxTotal) {
             this.cooldown = this.shotCooldown;
+            this.total ++;
             this.rockets.push(new Rocket(this.p5, this.pos, target,this.player));
         }
     }

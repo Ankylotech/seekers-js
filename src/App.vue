@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Selector from "./components/selectOpponents.vue";
+import Selector from "./components/SelectOpponents.vue";
 import Simulator from "./components/Simulator.vue";
 
 export default {
