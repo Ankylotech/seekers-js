@@ -1,4 +1,4 @@
-import Seeker from "@/objects/seeker";
+import Seeker from "@/seekerTypes/seeker";
 
 export default class Chunky extends Seeker{
     constructor(player,p5) {

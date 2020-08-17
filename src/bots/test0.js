@@ -1,4 +1,4 @@
-import {Seeker} from "@/objects";
+import {Seeker} from "@/seekerTypes";
 
 export function create(player) {
     this.player = player;

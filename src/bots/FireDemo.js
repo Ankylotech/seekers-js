@@ -1,4 +1,4 @@
-import {Seeker,Tank} from "@/objects";
+import {Seeker,Tank} from "@/seekerTypes";
 
 export function create(player) {
     this.player = player;

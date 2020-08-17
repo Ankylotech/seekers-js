@@ -1,5 +1,5 @@
-import Seeker from "@/objects/seeker";
-import Rocket from "@/objects/rocket";
+import Seeker from "@/seekerTypes/seeker";
+import Rocket from "@/seekerTypes/rocket";
 
 export default class Tank extends Seeker {
     constructor(player, p5) {
