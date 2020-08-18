@@ -1,8 +1,8 @@
 import Seeker from "@/seekerTypes/seeker";
 
 export default class Chunky extends Seeker{
-    constructor(player,p5) {
-        super(player,p5);
+    constructor(player) {
+        super(player);
         this.maxSpeed = 0.875;
         this.radius = 6;
         this.mass = 5;

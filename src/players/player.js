@@ -4,7 +4,7 @@ export default class Player {
     enemy;
 
     constructor(file, p5, side, goals, max) {
-        this.player = require('../bots/' + file.name);
+        this.bot = require('../bots/' + file.name);
         this.name = file.name.substring(0, file.name.length - 3);
         this.goals = goals;
         this.max = max;
@@ -20,7 +20,7 @@ export default class Player {
     reset(side) {
         this.seekers = [];
         this.side = side;
-        this.player.create(this);
+        this.player = new this.bot.default(this);
         this.score = 0;
         this.camp = new Camp(this, this.p5);
     }

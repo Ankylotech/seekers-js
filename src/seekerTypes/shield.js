@@ -1,8 +1,8 @@
 import Seeker from "@/seekerTypes/seeker";
 
 export default class Shield extends Seeker {
-    constructor(player, p5) {
-        super(player, p5);
+    constructor(player) {
+        super(player);
         this.maxSpeed = 2;
         this.radius = 4;
         this.mass = 2;
@@ -15,10 +15,11 @@ export default class Shield extends Seeker {
         this.maxShieldTime = 150;
         this.maxShieldRadius = 16;
         this.shieldRadius = 0;
-        this.recovery = 1;
+        this.recovery = 4;
     }
 
     update() {
+        this.magnetStatus = this.pullStrength;
         if (this.shieldTime <= 0) {
             this.shieldRadius = 0;
             this.magnetStatus = 0;
@@ -27,7 +28,6 @@ export default class Shield extends Seeker {
         if (this.shieldTime <= 0) {
             this.shieldTime = -20;
             this.shieldRadius = 0;
-            this.magnetStatus = 0;
         } else if (this.shieldTime >= this.maxShieldTime) {
             this.shieldTime = this.maxShieldTime;
         }
@@ -49,6 +49,10 @@ export default class Shield extends Seeker {
     shield(radius) {
         if (radius <= this.maxShieldRadius - this.radius && this.shieldTime > 0 && !this.disabled) this.shieldRadius = radius + this.radius;
         else this.shieldRadius = 0;
+    }
+
+    disableShield() {
+        this.shieldRadius = 0;
     }
 
     disable(factor, enemy) {

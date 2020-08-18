@@ -1,7 +1,7 @@
 import GameObject from "@/objects/gameObject";
 
 export default class Seeker extends GameObject {
-    constructor(player, p5) {
+    constructor(player, p5 = player.p5) {
         super(p5);
         this.player = player;
         this.color = this.player.color;

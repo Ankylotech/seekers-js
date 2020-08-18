@@ -1,12 +1,13 @@
-import {Seeker} from "@/seekerTypes";
+import AbstractBot from "@/bots/AbstractBot";
 
-export function create(player) {
-    this.player = player;
-    for(let i = 0; i < player.max; i++) {
-        player.seekers.push(new Seeker(player, player.p5))
+export default class bot extends AbstractBot {
+    constructor(player) {
+        super(player);
+        for(let i = 0; i < this.player.max; i++) {
+            this.addSeeker();
+        }
     }
-}
 
-export function update() {
-
+    update() {
+    }
 }

@@ -1,7 +1,7 @@
 import Seeker from "@/seekerTypes/seeker";
 export default class Speedy extends Seeker{
-    constructor(player,p5) {
-        super(player,p5);
+    constructor(player) {
+        super(player);
         this.maxSpeed = 2.5;
         this.radius = 4;
         this.mass = 2;

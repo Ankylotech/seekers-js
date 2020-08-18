@@ -2,8 +2,8 @@ import Seeker from "@/seekerTypes/seeker";
 import Rocket from "@/seekerTypes/rocket";
 
 export default class Tank extends Seeker {
-    constructor(player, p5) {
-        super(player, p5);
+    constructor(player) {
+        super(player);
         this.maxSpeed = 0.5;
         this.radius = 4;
         this.mass = 2;
