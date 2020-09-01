@@ -1,7 +1,7 @@
 class Shield extends Seeker {
     constructor(player) {
         super(player);
-        this.maxSpeed = 2;
+        this.maxSpeed = 1;
         this.radius = 4;
         this.mass = 2;
         this.pullStrength /= 2;
@@ -13,7 +13,7 @@ class Shield extends Seeker {
         this.maxShieldTime = 150;
         this.maxShieldRadius = 16;
         this.shieldRadius = 0;
-        this.recovery = 4;
+        this.recovery = 2.5;
     }
 
     update() {
@@ -24,7 +24,7 @@ class Shield extends Seeker {
         }
         this.shieldTime += this.recovery - Math.sqrt(this.shieldRadius) - this.magnetStatus;
         if (this.shieldTime <= 0) {
-            this.shieldTime = -20;
+            this.shieldTime = -50;
             this.shieldRadius = 0;
         } else if (this.shieldTime >= this.maxShieldTime) {
             this.shieldTime = this.maxShieldTime;

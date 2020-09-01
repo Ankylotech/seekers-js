@@ -25,7 +25,7 @@ function draw() {
     if (files.length > 1 && !initialized) {
         console.log('let\'s GO!');
         initialize();
-    } else if (files.length == loaded && loading) {
+    } else if (files.length === loaded && loading) {
         matching.push(players[0]);
         matching.push(players[1]);
         scores.push(0);
@@ -34,7 +34,7 @@ function draw() {
         matching[1].enemy = matching[0];
         matching[1].setSide(1);
         loading = false;
-    } else if (files.length == loaded) {
+    } else if (files.length === loaded) {
         displayLeaderboard();
         if (games === players.length * (players.length - 1)) {
             background(0);
