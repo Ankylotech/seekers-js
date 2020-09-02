@@ -5,7 +5,7 @@ class AbstractBot {
         this.seekers = function () {
             return this.player.seekers;
         }
-        this.others = function () {
+        this.enemys = function () {
             return [...this.player.enemy.seekers];
         }
         this.goals = function () {

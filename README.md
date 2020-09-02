@@ -6,15 +6,15 @@ Compete with your friends in this Programming tournament
 
 ### General
 
-In Seekers, you Program different Bots that then compete against each
-other to see who programmed the best one.
-The Goal of the game is to collect as many 'goals' as you can while stopping your enemy from doing the same. 
-Whoever scores the most at the end of the game wins! 
+In Seekers, you program different bots that then compete against each
+other to see who was programmed the best.
+The Goal of the game is to collect as many 'goals' as you can, by getting them into your own camp,  while stopping your enemy from doing the same. 
+Whoever scored the most at the end of the game wins! 
 
 For this the so called 'seekers' are equipped with magnets that can attract or push away the goals. 
-To disrupt your enemy from collecting goals, you can ram their seekers with your own. 
+To disrupt your enemy from collecting goals however, you can ram their seekers with your own. 
 This results in both seekers being stunned for a short while. 
-If however the enemy seeker had their magnet activated but yours didn't, only the enemy seeker will be disabled! 
+If the enemy seeker had their magnet activated but yours didn't, only the enemy seeker will be disabled! 
 
 All in all if you want to win, you have to find a balance between disrupting your enemy and getting goals yourself. 
 
@@ -38,7 +38,7 @@ The basic seeker, nothing too special, but also not useless.
 
 #### Speedy
 
-A faster seeker that has an almost useless magnet and stays inactive after ramming a little bit longer.
+A faster seeker that has an almost useless magnet that also stays inactive after ramming a little bit longer.
 
 
 ##### Stats:
@@ -66,7 +66,8 @@ A big seeker with a very strong magnetic field, and short recovery after a ram.
 
 #### Tank
 
-A seeker that can shoot at a position and disable up to one target. Bullets are blocked by any object and all seekers will collide with them as if it were a seeker.
+A seeker that can shoot at a position and disable up to one target. 
+Bullets are blocked by any object and all seekers will collide with them as if it were a normal seeker.
 
 You can adjust the size of the bullet and thereby the speed at witch it travels.
 
@@ -88,7 +89,7 @@ A seeker that can activate a Shield around himself that blocks all enemy seekers
 
 The magnet however cannot be controlled and is pulling at all times
 
-The Shield cannot be activated at all times, when inactive it slowly regenerates. 
+The Shield cannot be activated constantly, when inactive it slowly regenerates. 
 The bigger the shield the less time it can be activated.
 
 
@@ -140,8 +141,33 @@ class bot extends AbstractBot {
 
 #### Functions
 
-To add the different Seeker Types you can use the ``addSeeker()`` function. To add different seeker types instead use ``add + TYPE ``, for example ``addSpeedy()``
+To add a seeker you can use the ``addSeeker()`` function. 
+To add different seeker types use ``add + TYPE `` instead, for example ``addSpeedy()``
 
+##### Gameobjects
+
+To access different parts of the game and interact with them, use the following functions:
+- ``seekers()`` returns a list of all your seekers
+- ``enemys()`` returns a list of your enemys seekers
+- ``goals()`` returns a list of all goals
+- ``ownCamp()`` return your Camp to return the goals to and score points
+- ``enemyCamp()`` returns your enemys camp
+- ``allRockets()`` returns a list of all currently fired rockets
+
+##### Seekers
+All seekers have the following functions: 
+- ``setTarget(v)`` sets the target of the seeker to the given position v
+- ``setMagnetActive()`` sets the Magnet to the pulling strength
+- ``setMagnetDisabled()`` disables the Magnet
+- ``setMagnetRepulsive()`` sets the Magnet to the pushing strength
+
+The Tank fires with the ``shoot(target, size)`` function, you select a target to fire at and a size to do it with. 
+The bigger the bullet, the slower it is, but also the longer the target is stunned.
+
+The Shield is activated with the ``shield(radius)`` function. To deactivate it set the radius to 0. 
+The radius given is then added to the radius of the seeker to get the full radius of the shield.
+
+##### Remaining
 Some quality of life functions include: 
 
 - ``dist(v1,v2)``: calculates the distance between the vectors v1 and v2, also compensates for going through the edges

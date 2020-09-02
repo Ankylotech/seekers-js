@@ -26,7 +26,7 @@ class bot extends AbstractBot {
 
         let fire = false;
         let target = null;
-        this.others().forEach(seeker => {
+        this.enemys().forEach(seeker => {
             if(seeker.vel.mag() === 0) {
                 target = seeker;
                 fire = true;
@@ -35,14 +35,14 @@ class bot extends AbstractBot {
         if(fire){
             seekers[2].shoot(target.pos,2);
         }else {
-            seekers[2].shoot(this.getNearest(seekers[2].pos,this.others()).pos,0.5);
+            seekers[2].shoot(this.getNearest(seekers[2].pos,this.enemys()).pos,0.5);
         }
 
         seekers[2].setTarget(this.p5.createVector(-50 + this.enemyCamp().pos.x,this.enemyCamp().pos.y))
 
         seekers[3].setTarget(this.enemyCamp().pos);
         if(this.dist(seekers[3].pos,this.enemyCamp().pos) < 10) {
-            let allEnemys = [...this.others()].concat(this.allRockets());
+            let allEnemys = [...this.enemys()].concat(this.allRockets());
             let nearest;
             if(allEnemys.length > 0) nearest = this.getNearest(seekers[3].pos,allEnemys).pos;
             if(!nearest ||  this.dist(nearest,seekers[3].pos) < 20) {
@@ -52,7 +52,7 @@ class bot extends AbstractBot {
             }
         }
 
-        seekers[4].setTarget(this.getNearest(this.enemyCamp().pos,this.others()).pos)
+        seekers[4].setTarget(this.getNearest(this.enemyCamp().pos,this.enemys()).pos)
     }
 
 }
